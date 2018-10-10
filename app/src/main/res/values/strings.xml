@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BicycleCounter</string>
+    <string name="start_button">Start tracking</string>
+    <string name="stop_button">Stop tracking</string>
+    <string name="longitudeText">Longitude:</string>
+    <string name="latitudeText">Latitude:</string>
+    <string name="dateText">Date and time:</string>
+    <string name="speedText">Actual speed:</string>
+</resources>
