@@ -3,6 +3,7 @@ package com.intern.wlacheta.testapp.permissions;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -21,17 +22,17 @@ public class PermissionsProcessor {
         this.activity = passedActivity;
     }
 
-    public boolean isPermissionsGranted() {
+    public boolean isPermissionsNotGranted() {
         if (ContextCompat.checkSelfPermission(context, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(context, PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED ) {
             Toast.makeText(context, "You have already granted geolocation permission!",
                     Toast.LENGTH_SHORT).show();
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 
-    public void requestStoragePermission() {
+    public void requestLocationPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[0]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[1])) {
             new AlertDialog.Builder(context)
                     .setTitle("Permission needed")
