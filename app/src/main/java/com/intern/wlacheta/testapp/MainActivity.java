@@ -14,12 +14,10 @@ import android.widget.Toast;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 
 public class MainActivity extends AppCompatActivity {
-    private final LocationTracker locationTracker = new LocationTracker(this);
+    private final LocationTracker locationTracker = new LocationTracker(this,this);
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this,this);
 
     private Button startButton, stopButton;
-    private boolean isStartButtonClicked = false;
-    private boolean isStopButtonClicked = false;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -33,27 +31,34 @@ public class MainActivity extends AppCompatActivity {
         stopButton.setEnabled(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(locationTracker.isRequestForLocation()) {
+            //setCoordinatesData(locationTracker.getLatitude(), locationTracker.getLongitude());
+        }
+    }
+    
     public void onStartButtonClick(View view) {
         if(permissionsProcessor.isPermissionsNotGranted()) {
             permissionsProcessor.requestLocationPermissions();
         } else {
+            startButton = findViewById(R.id.startButton);
+            stopButton = findViewById(R.id.stopButton);
+            startButton.setEnabled(false);
+            stopButton.setEnabled(true);
+
             locationTracker.requestForLocation();
-            setCoordinatesData(locationTracker.getLatitude(), locationTracker.getLongitude());
         }
     }
 
     public void onStopButtonClick(View view) {
+        locationTracker.stopTracking();
 
-    }
-
-    private void setCoordinatesData(double latitude, double longitude) {
-        String latitudeToString = String.valueOf(latitude);
-        String longitudeToString = String.valueOf(longitude);
-
-        TextView latitudeData = findViewById(R.id.latitudeData);
-        latitudeData.setText(latitudeToString);
-        TextView longitudeData = findViewById(R.id.longitudeData);
-        longitudeData.setText(longitudeToString);
+        startButton = findViewById(R.id.startButton);
+        stopButton = findViewById(R.id.stopButton);
+        startButton.setEnabled(true);
+        stopButton.setEnabled(false);
     }
 
     @Override
