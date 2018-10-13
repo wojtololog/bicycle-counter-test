@@ -7,9 +7,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.widget.TextView;
 
 import com.intern.wlacheta.testapp.R;
+import com.intern.wlacheta.testapp.location.datamanager.SpeedCalculator;
+import com.intern.wlacheta.testapp.location.model.MapPoint;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,10 +24,11 @@ public class LocationTracker implements LocationListener {
     private LocationManager locationManager;
     private Location location;
 
+    private final SpeedCalculator speedCalculator = new SpeedCalculator();
+    private MapPoint mapPoint;
+
     private boolean isRequestForLocation;
-    private double latitude;
-    private double longitude;
-    private final int minIntervalTimeInMiliSeconds = 2000;
+    private final int minIntervalTimeInMiliSeconds = 3000;
     private final int minIntervalDistanceInMeters = 0;
 
     public LocationTracker(Context context, Activity activity) {
@@ -34,9 +38,13 @@ public class LocationTracker implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        this.location = location;
-        setCoordinatesData(this.location.getLatitude(), this.location.getLongitude());
-        setDate(this.location.getTime());
+        if(location != null) {
+            this.location = location;
+            mapPoint = new MapPoint(location.getLatitude(),location.getLongitude());
+            setCoordinatesData(mapPoint.getLatitude(), mapPoint.getLongitude());
+            setDate(this.location.getTime());
+            setSpeed(this.location.getSpeed());
+        }
     }
 
     @Override
@@ -59,17 +67,18 @@ public class LocationTracker implements LocationListener {
     public void requestForLocation() {
         isRequestForLocation = true;
         locationManager = (LocationManager) actualContext.getSystemService(Context.LOCATION_SERVICE);
+       // locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this, null); //todo wait for GPS established connection
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minIntervalTimeInMiliSeconds, minIntervalDistanceInMeters, this);
-        if (locationManager != null) {
+      /*  if (locationManager != null) {
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
                 setCoordinatesData(latitude, longitude);
                 setDate(location.getTime());
+                setSpeed(location.getSpeed());
             }
-        }
-
+        }*/
     }
 
     public void stopTracking() {
@@ -100,6 +109,13 @@ public class LocationTracker implements LocationListener {
 
         TextView dateData = actualActivity.findViewById(R.id.dateData);
         dateData.setText(dateToString);
+    }
+
+    public void setSpeed(float speed) {
+        String speedToString = String.valueOf(speed);
+
+        TextView speedData = actualActivity.findViewById(R.id.speedData);
+        speedData.setText(speedToString);
     }
 
     public boolean isRequestForLocation() {

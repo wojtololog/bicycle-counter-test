@@ -5,5 +5,5 @@
     <string name="longitudeText">Longitude:</string>
     <string name="latitudeText">Latitude:</string>
     <string name="dateText">Date and time:</string>
-    <string name="speedText">Actual speed:</string>
+    <string name="speedText">Actual speed [m/s]:</string>
 </resources>

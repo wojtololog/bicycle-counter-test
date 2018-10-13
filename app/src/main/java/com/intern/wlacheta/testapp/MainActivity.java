@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStopButtonClick(View view) {
         locationTracker.stopTracking();
         locationTracker.setCoordinatesData(0,0);
+        locationTracker.setSpeed(0);
 
         startButton = findViewById(R.id.startButton);
         stopButton = findViewById(R.id.stopButton);
