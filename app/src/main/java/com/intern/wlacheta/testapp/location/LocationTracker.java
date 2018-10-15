@@ -28,8 +28,10 @@ public class LocationTracker implements LocationListener {
     private MapPoint mapPoint;
 
     private boolean isRequestForLocation;
-    private final int minIntervalTimeInMiliSeconds = 3000;
-    private final int minIntervalDistanceInMeters = 0;
+    private final int minIntervalTimeInMiliSeconds = 1000;
+    private final int minIntervalDistanceInMeters = 3;
+    private final int minPointsInterval = 5;
+    private static short countToMinPointsInterval = 0;
 
     public LocationTracker(Context context, Activity activity) {
         actualContext = context;
@@ -40,10 +42,16 @@ public class LocationTracker implements LocationListener {
     public void onLocationChanged(Location location) {
         if(location != null) {
             this.location = location;
-            mapPoint = new MapPoint(location.getLatitude(),location.getLongitude());
+            mapPoint = new MapPoint(location.getLatitude(),location.getLongitude(),location.getTime());
+            if (countToMinPointsInterval == 5) {
+                speedCalculator.addToMapPoints(mapPoint);
+                countToMinPointsInterval = 0;
+            }
             setCoordinatesData(mapPoint.getLatitude(), mapPoint.getLongitude());
-            setDate(this.location.getTime());
-            setSpeed(this.location.getSpeed());
+            setDate(mapPoint.getTimestamp());
+            speedCalculator.computeSpeed();
+            setSpeed(speedCalculator.getSpeed());
+            countToMinPointsInterval++;
         }
     }
 
@@ -85,6 +93,7 @@ public class LocationTracker implements LocationListener {
         if (locationManager != null) {
             isRequestForLocation = false;
             locationManager.removeUpdates(LocationTracker.this);
+            speedCalculator.clearMapPoints();
         }
     }
 
@@ -111,7 +120,7 @@ public class LocationTracker implements LocationListener {
         dateData.setText(dateToString);
     }
 
-    public void setSpeed(float speed) {
+    public void setSpeed(double speed) {
         String speedToString = String.valueOf(speed);
 
         TextView speedData = actualActivity.findViewById(R.id.speedData);
