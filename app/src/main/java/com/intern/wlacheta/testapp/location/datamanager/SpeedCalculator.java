@@ -12,35 +12,42 @@ public class SpeedCalculator {
 
     private double speed;
 
-    private void searchForComputingMapPoints() {
+    private boolean searchForComputingMapPoints() {
        if(mapPoints.size() > 2) {
            int lastIndex = mapPoints.size() - 1;
            newestMapPoint = mapPoints.get(lastIndex);
            previousMapPoint = mapPoints.get(lastIndex-1);
+           return true;
        }
+       return false;
     }
 
     private double computeDistanceBetweenTwoPoints() {
-        searchForComputingMapPoints();
-        double latitudeInRadian = Math.toRadians(newestMapPoint.getLatitude() - previousMapPoint.getLatitude());
-        double longitutdeInRadian = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude());
-        double a = Math.sin(latitudeInRadian / 2) * Math.sin(latitudeInRadian / 2) + Math.cos(Math.toRadians(previousMapPoint.getLatitude())) * Math.cos(Math.toRadians(newestMapPoint.getLatitude())) * Math.sin(longitutdeInRadian / 2) * Math.sin(longitutdeInRadian / 2);
-        int earthRay = 6371000; //in meters
-        return 2 * earthRay * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        if(searchForComputingMapPoints()) {
+            double latitudeInRadian = Math.toRadians(newestMapPoint.getLatitude() - previousMapPoint.getLatitude());
+            double longitutdeInRadian = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude());
+            double a = Math.sin(latitudeInRadian / 2) * Math.sin(latitudeInRadian / 2) + Math.cos(Math.toRadians(previousMapPoint.getLatitude())) * Math.cos(Math.toRadians(newestMapPoint.getLatitude())) * Math.sin(longitutdeInRadian / 2) * Math.sin(longitutdeInRadian / 2);
+            int earthRay = 6371000; //in meters
+            return 2 * earthRay * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+        return 0;
     }
 
     private double computeTimeDifferenceBetweenTwoPoints() {
         long newestTime = newestMapPoint.getTimestamp();
         long previousTime = previousMapPoint.getTimestamp();
-        long timeDelta = (newestTime - previousTime) / 1000; //in [s]
-        return timeDelta;
+        return (newestTime - previousTime) / 1000; //time delta in [s]
     }
 
     public void computeSpeed() {
         double distanceInMeters = computeDistanceBetweenTwoPoints();
-        double distanceInKiloMeters = distanceInMeters / 1000;
-        double timeInSeconds = computeTimeDifferenceBetweenTwoPoints();
-        this.speed = distanceInKiloMeters / timeInSeconds;
+        if(distanceInMeters != 0) {
+            double distanceInKiloMeters = distanceInMeters / 1000;
+            double timeInSeconds = computeTimeDifferenceBetweenTwoPoints();
+            this.speed = distanceInKiloMeters / timeInSeconds;
+        } else {
+            this.speed = 0;
+        }
     }
 
     public double getSpeed() {
