@@ -8,16 +8,18 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="117dp"
-        android:layout_height="222dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
-        android:layout_marginBottom="192dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="208dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startButton"
-        app:layout_constraintVertical_bias="0.454">
+        app:layout_constraintTop_toBottomOf="@+id/startButton">
 
         <TextView
             android:id="@+id/longitudeLabel"
@@ -38,28 +40,34 @@
             android:text="@string/dateText" />
 
         <TextView
-            android:id="@+id/speedLabel"
+            android:id="@+id/computedSpeedLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/speedText" />
+            android:text="@string/computeSpeedText" />
+
+        <TextView
+            android:id="@+id/locationSpeedLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/locationSpeedText" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="0dp"
-        android:layout_height="61dp"
+        android:layout_height="64dp"
         android:layout_marginStart="29dp"
         android:layout_marginLeft="29dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="58dp"
         android:layout_marginRight="58dp"
-        android:layout_marginBottom="25dp"
-        android:text="@string/start_button"
+        android:layout_marginBottom="13dp"
         android:clickable="true"
         android:focusable="true"
         android:onClick="onStartButtonClick"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        android:text="@string/start_button"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toStartOf="@+id/stopButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -67,25 +75,32 @@
     <Button
         android:id="@+id/stopButton"
         android:layout_width="0dp"
-        android:layout_height="61dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="39dp"
         android:layout_marginRight="39dp"
-        android:text="@string/stop_button"
+        android:layout_marginBottom="13dp"
         android:clickable="true"
         android:focusable="true"
         android:onClick="onStopButtonClick"
+        android:text="@string/stop_button"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/startButton"
-        app:layout_constraintTop_toTopOf="@+id/startButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="143dp"
-        android:layout_height="218dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginRight="39dp"
         android:layout_marginBottom="212dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/stopButton">
 
         <TextView
             android:id="@+id/longitudeData"
@@ -106,7 +121,13 @@
             android:text="" />
 
         <TextView
-            android:id="@+id/speedData"
+            android:id="@+id/computedSpeedData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/locationSpeedData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="" />

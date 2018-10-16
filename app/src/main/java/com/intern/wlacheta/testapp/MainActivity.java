@@ -53,14 +53,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStopButtonClick(View view) {
-        locationTracker.stopTracking();
-        locationTracker.setCoordinatesData(0,0);
-        locationTracker.setSpeed(0);
+        clearTrackingData();
 
         startButton = findViewById(R.id.startButton);
         stopButton = findViewById(R.id.stopButton);
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
+    }
+
+    private void clearTrackingData() {
+        locationTracker.stopTracking();
+        locationTracker.setCoordinatesData(0,0);
+        locationTracker.setSpeed(0);
+        locationTracker.setLocationSpeed(0);
     }
 
     @Override

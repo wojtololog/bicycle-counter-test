@@ -7,13 +7,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.widget.TextView;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.location.datamanager.SpeedCalculator;
 import com.intern.wlacheta.testapp.location.model.MapPoint;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,9 +29,10 @@ public class LocationTracker implements LocationListener {
 
     private boolean isRequestForLocation;
     private final int minIntervalTimeInMiliSeconds = 1000;
-    private final int minIntervalDistanceInMeters = 3;
-    private final int minPointsInterval = 5;
+    private final int minIntervalDistanceInMeters = 0;
+    private final int minPointsInterval = 2;
     private static short countToMinPointsInterval = 0;
+    private final DecimalFormat speedFormat = new DecimalFormat("##.#");
 
     public LocationTracker(Context context, Activity activity) {
         actualContext = context;
@@ -43,16 +44,26 @@ public class LocationTracker implements LocationListener {
         if(location != null) {
             this.location = location;
             mapPoint = new MapPoint(location.getLatitude(),location.getLongitude(),location.getTime());
-            if (countToMinPointsInterval == 5) {
+            if (countToMinPointsInterval == minPointsInterval) {
                 speedCalculator.addToMapPoints(mapPoint);
                 countToMinPointsInterval = 0;
             }
             setCoordinatesData(mapPoint.getLatitude(), mapPoint.getLongitude());
             setDate(mapPoint.getTimestamp());
             speedCalculator.computeSpeed();
+            if(this.location.hasSpeed()) {
+                setLocationSpeed(location.getSpeed());
+            }
             setSpeed(speedCalculator.getSpeed());
             countToMinPointsInterval++;
         }
+    }
+
+    public void setLocationSpeed(float speed) {
+        String speedToString = String.valueOf(speed);
+
+        TextView speedData = actualActivity.findViewById(R.id.locationSpeedData);
+        speedData.setText(speedToString);
     }
 
     @Override
@@ -123,7 +134,7 @@ public class LocationTracker implements LocationListener {
     public void setSpeed(double speed) {
         String speedToString = String.valueOf(speed);
 
-        TextView speedData = actualActivity.findViewById(R.id.speedData);
+        TextView speedData = actualActivity.findViewById(R.id.computedSpeedData);
         speedData.setText(speedToString);
     }
 

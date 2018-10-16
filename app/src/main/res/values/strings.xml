@@ -5,5 +5,6 @@
     <string name="longitudeText">Longitude:</string>
     <string name="latitudeText">Latitude:</string>
     <string name="dateText">Date and time:</string>
-    <string name="speedText">Actual speed [m/s]:</string>
+    <string name="computeSpeedText">computedSpeed km/h:</string>
+    <string name="locationSpeedText">locationSpeed km/h:</string>
 </resources>

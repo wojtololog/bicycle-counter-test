@@ -24,11 +24,18 @@ public class SpeedCalculator {
 
     private double computeDistanceBetweenTwoPoints() {
         if(searchForComputingMapPoints()) {
+            //haversine law
             double latitudeInRadian = Math.toRadians(newestMapPoint.getLatitude() - previousMapPoint.getLatitude());
-            double longitutdeInRadian = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude());
-            double a = Math.sin(latitudeInRadian / 2) * Math.sin(latitudeInRadian / 2) + Math.cos(Math.toRadians(previousMapPoint.getLatitude())) * Math.cos(Math.toRadians(newestMapPoint.getLatitude())) * Math.sin(longitutdeInRadian / 2) * Math.sin(longitutdeInRadian / 2);
+            double longitudeInRadian = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude());
+            double a = Math.sin(latitudeInRadian / 2) * Math.sin(latitudeInRadian / 2) + Math.cos(Math.toRadians(previousMapPoint.getLatitude())) * Math.cos(Math.toRadians(newestMapPoint.getLatitude())) * Math.sin(longitudeInRadian / 2) * Math.sin(longitudeInRadian / 2);
             int earthRay = 6371000; //in meters
             return 2 * earthRay * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            //approximate version (Equirectangular)
+            /*int earthRay = 6371; //in km
+            double x = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude()) * Math.cos(Math.toRadians((newestMapPoint.getLatitude() + previousMapPoint.getLatitude()) / 2));
+            double y = Math.toRadians(newestMapPoint.getLatitude() - previousMapPoint.getLatitude());
+            return (Math.sqrt(x * x + y * y) * earthRay) / 1000;*/
         }
         return 0;
     }
@@ -42,9 +49,11 @@ public class SpeedCalculator {
     public void computeSpeed() {
         double distanceInMeters = computeDistanceBetweenTwoPoints();
         if(distanceInMeters != 0) {
-            double distanceInKiloMeters = distanceInMeters / 1000;
             double timeInSeconds = computeTimeDifferenceBetweenTwoPoints();
-            this.speed = distanceInKiloMeters / timeInSeconds;
+            this.speed = (distanceInMeters / timeInSeconds) * 3.6; //[km/h]
+            if(this.speed < 0.5) {
+                this.speed = 0;
+            }
         } else {
             this.speed = 0;
         }
