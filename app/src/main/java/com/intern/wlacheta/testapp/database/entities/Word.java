@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "words")
 public class Word {
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "word")
     private String mWord;
 

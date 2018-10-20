@@ -4,8 +4,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_name));
+        TabLayout tabLayout = findViewById(R.id.tablayout);
+        TabItem tabTracker = findViewById(R.id.tabTracker);
+        TabItem tabTrips = findViewById(R.id.tabTrips);
+
         if(permissionsProcessor.isPermissionsNotGranted()) {
             permissionsProcessor.requestLocationPermissions();
         }
