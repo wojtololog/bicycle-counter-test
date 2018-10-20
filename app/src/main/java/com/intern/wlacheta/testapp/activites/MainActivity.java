@@ -1,4 +1,4 @@
-package com.intern.wlacheta.testapp;
+package com.intern.wlacheta.testapp.activites;
 
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.location.LocationTracker;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 

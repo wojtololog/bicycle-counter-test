@@ -9,4 +9,7 @@
     <string name="locationSpeedText">locationSpeed km/h:</string>
     <string name="tracker_tab">Tracker</string>
     <string name="trips_tab">Saved trips</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
