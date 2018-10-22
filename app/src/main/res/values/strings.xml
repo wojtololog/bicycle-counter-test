@@ -7,4 +7,7 @@
     <string name="dateText">Date and time:</string>
     <string name="computeSpeedText">computedSpeed km/h:</string>
     <string name="locationSpeedText">locationSpeed km/h:</string>
+    <string name="saved_trips">Saved trips</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
 </resources>
