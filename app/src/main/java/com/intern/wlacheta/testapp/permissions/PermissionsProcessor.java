@@ -36,7 +36,7 @@ public class PermissionsProcessor {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[0]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[1])) {
             new AlertDialog.Builder(context)
                     .setTitle("Permission needed")
-                    .setMessage("This app requires GPS to work correctly")
+                    .setMessage("This app requires GPS to track your location and to show date and speed")
                     .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

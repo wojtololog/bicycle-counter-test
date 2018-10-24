@@ -1,5 +1,7 @@
 package com.intern.wlacheta.testapp.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,12 +17,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
+import com.intern.wlacheta.testapp.database.entities.Word;
+import com.intern.wlacheta.testapp.database.repositories.WordRepository;
 import com.intern.wlacheta.testapp.location.LocationTracker;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 
 public class TrackerActivity extends AppCompatActivity {
     private final LocationTracker locationTracker = new LocationTracker(this, this);
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
+    private WordRepository wordRepository;
 
     private Button startButton, stopButton;
 
@@ -33,6 +38,7 @@ public class TrackerActivity extends AppCompatActivity {
             permissionsProcessor.requestLocationPermissions();
         }
         stopButton = findViewById(R.id.stopButton);
+        startButton = findViewById(R.id.startButton);
         stopButton.setEnabled(false);
     }
 
@@ -88,8 +94,6 @@ public class TrackerActivity extends AppCompatActivity {
         if (permissionsProcessor.isPermissionsNotGranted()) {
             permissionsProcessor.requestLocationPermissions();
         } else {
-            startButton = findViewById(R.id.startButton);
-            stopButton = findViewById(R.id.stopButton);
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
 
@@ -97,14 +101,34 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
-    public void onStopButtonClick(View view) {
-        clearTrackingData();
+    private void createSaveToDBRequestDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Saving")
+                .setMessage("Would you like to save your trip ?")
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        wordRepository = new WordRepository(getApplication());
+                        wordRepository.insert(new Word("working"));
+                        Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+    }
 
-        startButton = findViewById(R.id.startButton);
-        stopButton = findViewById(R.id.stopButton);
+    public void onStopButtonClick(View view) {
+        createSaveToDBRequestDialog();
+        clearTrackingData();
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
     }
+
 
     private void clearTrackingData() {
         locationTracker.stopTracking();

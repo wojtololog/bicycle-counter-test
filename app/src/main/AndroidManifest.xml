@@ -26,7 +26,6 @@
             android:name=".activities.TripsActivity"
             android:launchMode="singleTask">
         </activity>
-        <activity android:name=".activities.NewDBElementActivity"></activity>
     </application>
 
 </manifest>
