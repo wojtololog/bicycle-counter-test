@@ -5,20 +5,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
-import com.intern.wlacheta.testapp.database.WordListAdapter;
+import com.intern.wlacheta.testapp.activities.adapters.WordListAdapter;
 import com.intern.wlacheta.testapp.database.entities.Word;
-import com.intern.wlacheta.testapp.database.viewmodel.WordsViewModel;
+import com.intern.wlacheta.testapp.activities.adapters.viewmodel.WordsViewModel;
 
 import java.util.List;
 

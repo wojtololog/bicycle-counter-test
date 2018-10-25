@@ -1,4 +1,4 @@
-package com.intern.wlacheta.testapp.database.viewmodel;
+package com.intern.wlacheta.testapp.activities.adapters.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
