@@ -115,7 +115,7 @@ public class LocationTracker implements LocationListener {
             MapPoint firstLocation = mapPoints.get(0);
             int lastIndex = mapPoints.size() - 1;
             MapPoint lastLocation = mapPoints.get(lastIndex);
-            return new Trip(firstLocation.getTimestamp(), DateConverter.fromTimestamp(firstLocation.getTimestamp()), lastLocation.getTimestamp());
+            return new Trip(firstLocation.getTimestamp(), DateConverter.fromTimeStampToDBFormat(firstLocation.getTimestamp()), lastLocation.getTimestamp());
         }
         else return null;
     }

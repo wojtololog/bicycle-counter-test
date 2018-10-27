@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class DateConverter {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private static final SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     @TypeConverter
     public static Date fromTimestamp(Long value) {
@@ -21,6 +22,12 @@ public class DateConverter {
     public static String fromTimeStampToString(long dateInUTC) {
         Date date = new Date(dateInUTC);
         String dateToString = simpleDateFormat.format(date);
+        return  dateToString;
+    }
+
+    public static String fromTimeStampToDBFormat(long dateInUTC) {
+        Date date = new Date(dateInUTC);
+        String dateToString = dbDateFormat.format(date);
         return  dateToString;
     }
 }

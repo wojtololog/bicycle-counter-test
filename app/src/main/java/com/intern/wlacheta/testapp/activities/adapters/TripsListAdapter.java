@@ -48,6 +48,7 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
         if (trips != null) {
             Trip currentTrip = trips.get(position);
             holder.tripIDItemView.setText(String.valueOf(position + 1));
+            //holder.tripStartDateView.setText(currentTrip.getStartTripDate());
             holder.tripStartDateView.setText(String.format(startTripDate,DateConverter.fromTimeStampToString(currentTrip.getStartTripTimestamp())));
             holder.tripEndDateView.setText(String.format(endTripDate,DateConverter.fromTimeStampToString(currentTrip.getEndTripTimestamp())));
         } else {

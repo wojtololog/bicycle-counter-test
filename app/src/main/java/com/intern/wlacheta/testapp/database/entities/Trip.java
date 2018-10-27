@@ -21,12 +21,12 @@ public class Trip {
     private long startTripTimestamp;
 
     @ColumnInfo(name = "start_date")
-    private Date startTripDate;
+    private String startTripDate;
 
     @ColumnInfo(name = "end_date_timestamp")
     private long endTripTimestamp;
 
-    public Trip(long startTripTimestamp, Date startTripDate, long endTripTimestamp) {
+    public Trip(long startTripTimestamp, String startTripDate, long endTripTimestamp) {
         this.startTripTimestamp = startTripTimestamp;
         this.startTripDate = startTripDate;
         this.endTripTimestamp = endTripTimestamp;
@@ -58,11 +58,11 @@ public class Trip {
         this.endTripTimestamp = endTripTimestamp;
     }
 
-    public Date getStartTripDate() {
+    public String getStartTripDate() {
         return startTripDate;
     }
 
-    public void setStartTripDate(Date startTripDate) {
+    public void setStartTripDate(String startTripDate) {
         this.startTripDate = startTripDate;
     }
 }

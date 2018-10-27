@@ -105,7 +105,7 @@ public class TrackerActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Saving")
                 .setMessage("Would you like to save your trip ?")
-                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         TripRepository tripRepository = new TripRepository(getApplication());
@@ -117,7 +117,7 @@ public class TrackerActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

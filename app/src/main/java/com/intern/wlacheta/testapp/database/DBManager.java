@@ -12,7 +12,7 @@ import com.intern.wlacheta.testapp.database.dao.TripDao;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.entities.Word;
 
-@Database(entities = {Word.class, Trip.class}, version = 2)
+@Database(entities = {Word.class, Trip.class}, version = 3)
 public abstract class DBManager extends RoomDatabase {
     public abstract IWordDao wordDao();
     public abstract TripDao tripDao();

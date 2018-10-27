@@ -20,6 +20,7 @@ import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
 import com.intern.wlacheta.testapp.activities.fragments.DatePickerFragment;
 import com.intern.wlacheta.testapp.database.entities.Trip;
+import com.intern.wlacheta.testapp.database.utils.DateConverter;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -55,7 +56,7 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        Date searchingDate = calendar.getTime();
+        String searchingDate = DateConverter.fromTimeStampToDBFormat(calendar.getTimeInMillis());
 
        // tripsViewModel.getTripsByDate(searchingDate);
     }
