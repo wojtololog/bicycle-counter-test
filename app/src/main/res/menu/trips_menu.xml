@@ -6,6 +6,10 @@
         android:title="@string/tracker"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/search_trips"
+        android:title="@string/search"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/settings_trips"
         android:title="@string/settings"
         app:showAsAction="never"/>

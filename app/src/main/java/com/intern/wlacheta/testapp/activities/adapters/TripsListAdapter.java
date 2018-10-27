@@ -17,6 +17,9 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
     private final String startTripDate = "Start date: %s";
     private final String endTripDate = "End date: %s";
 
+    private final LayoutInflater mInflater;
+    private List<Trip> trips; // Cached copy of words
+
     class TripsViewHolder extends RecyclerView.ViewHolder {
         private final TextView tripIDItemView;
         private final TextView tripStartDateView;
@@ -29,9 +32,6 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
             tripEndDateView = itemView.findViewById(R.id.endTripDate);
         }
     }
-
-    private final LayoutInflater mInflater;
-    private List<Trip> trips; // Cached copy of words
 
     public TripsListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
