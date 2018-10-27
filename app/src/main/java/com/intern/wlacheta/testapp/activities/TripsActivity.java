@@ -29,15 +29,17 @@ import java.util.List;
 
 public class TripsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private TripsViewModel tripsViewModel;
+    private TripsListAdapter adapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         //final WordListAdapter adapter = new WordListAdapter(this);
-        final TripsListAdapter adapter = new TripsListAdapter(this);
+        adapter = new TripsListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -58,7 +60,15 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String searchingDate = DateConverter.fromTimeStampToDBFormat(calendar.getTimeInMillis());
 
-       // tripsViewModel.getTripsByDate(searchingDate);
+        adapter = new TripsListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        tripsViewModel.getTripsByDate(searchingDate).observe(this, new Observer<List<Trip>>() {
+            @Override
+            public void onChanged(@Nullable List<Trip> trips) {
+                adapter.setAllTrips(trips);
+            }
+        });
     }
 
     @Override

@@ -25,5 +25,5 @@ public interface TripDao {
     LiveData<List<Trip>> getAllTrips();
 
     @Query("SELECT * FROM trips WHERE start_date=:pickedDate")
-    LiveData<List<Trip>> findTripsByStartDate(final Date pickedDate);
+    LiveData<List<Trip>> findTripsByStartDate(final String pickedDate);
 }

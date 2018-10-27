@@ -29,7 +29,7 @@ public class TripsViewModel extends AndroidViewModel {
         return allTrips;
     }
 
-    public LiveData<List<Trip>> getTripsByDate(Date pickedDate) {
+    public LiveData<List<Trip>> getTripsByDate(String pickedDate) {
         tripsByDate = tripRepository.getTripsByStartDate(pickedDate);
         return tripsByDate;
     }

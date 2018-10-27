@@ -26,7 +26,7 @@ public class TripRepository {
         return allTrips;
     }
 
-    public LiveData<List<Trip>> getTripsByStartDate(Date pickedDate) {
+    public LiveData<List<Trip>> getTripsByStartDate(String pickedDate) {
         tripsByDate = tripDao.findTripsByStartDate(pickedDate);
         return tripsByDate;
     }
