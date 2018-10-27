@@ -14,14 +14,19 @@ import com.intern.wlacheta.testapp.database.utils.DateConverter;
 import java.util.List;
 
 public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.TripsViewHolder>  {
-    private String tripItemInfo = "ID: %d  StartDate: %s";
+    private final String startTripDate = "Start date: %s";
+    private final String endTripDate = "End date: %s";
 
     class TripsViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tripItemView;
+        private final TextView tripIDItemView;
+        private final TextView tripStartDateView;
+        private final TextView tripEndDateView;
 
         private TripsViewHolder(View itemView) {
             super(itemView);
-            tripItemView = itemView.findViewById(R.id.textView);
+            tripIDItemView = itemView.findViewById(R.id.tripID);
+            tripStartDateView = itemView.findViewById(R.id.startTripDate);
+            tripEndDateView = itemView.findViewById(R.id.endTripDate);
         }
     }
 
@@ -42,10 +47,12 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
     public void onBindViewHolder(TripsViewHolder holder, int position) {
         if (trips != null) {
             Trip currentTrip = trips.get(position);
-            holder.tripItemView.setText(String.format(tripItemInfo,currentTrip.getId(),DateConverter.fromTimeStampToString(currentTrip.getStartTripTimestamp())));
+            holder.tripIDItemView.setText(String.valueOf(position + 1));
+            holder.tripStartDateView.setText(String.format(startTripDate,DateConverter.fromTimeStampToString(currentTrip.getStartTripTimestamp())));
+            holder.tripEndDateView.setText(String.format(endTripDate,DateConverter.fromTimeStampToString(currentTrip.getEndTripTimestamp())));
         } else {
             // Covers the case of data not being ready yet.
-            holder.tripItemView.setText("No ModelTrip");
+            holder.tripIDItemView.setText("No ModelTrip");
         }
     }
 
