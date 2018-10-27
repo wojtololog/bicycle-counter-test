@@ -10,12 +10,18 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.intern.wlacheta.testapp.R;
+import com.intern.wlacheta.testapp.database.entities.Trip;
+import com.intern.wlacheta.testapp.database.utils.DateConverter;
 import com.intern.wlacheta.testapp.location.datamanager.SpeedCalculator;
 import com.intern.wlacheta.testapp.location.model.MapPoint;
+import com.intern.wlacheta.testapp.location.model.ModelTrip;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class LocationTracker implements LocationListener {
     private final Context actualContext;
@@ -27,10 +33,13 @@ public class LocationTracker implements LocationListener {
     private final SpeedCalculator speedCalculator = new SpeedCalculator();
     private MapPoint mapPoint;
 
+    private Trip tripToSave;
+    private List<MapPoint> mapPoints = new ArrayList<MapPoint>();
+
     private boolean isRequestForLocation;
     private final int minIntervalTimeInMiliSeconds = 1000;
     private final int minIntervalDistanceInMeters = 0;
-    private final int minPointsInterval = 2;
+    private final short minPointsInterval = 2;
     private static short countToMinPointsInterval = 0;
     private final DecimalFormat speedFormat = new DecimalFormat("##.#");
 
@@ -44,6 +53,7 @@ public class LocationTracker implements LocationListener {
         if(location != null) {
             this.location = location;
             mapPoint = new MapPoint(location.getLatitude(),location.getLongitude(),location.getTime());
+            mapPoints.add(mapPoint);
             if (countToMinPointsInterval == minPointsInterval) {
                 speedCalculator.addToMapPoints(mapPoint);
                 countToMinPointsInterval = 0;
@@ -82,30 +92,32 @@ public class LocationTracker implements LocationListener {
     }
 
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission") //it is handled by permission processor
     public void requestForLocation() {
         isRequestForLocation = true;
         locationManager = (LocationManager) actualContext.getSystemService(Context.LOCATION_SERVICE);
-       // locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,this, null); //todo wait for GPS established connection
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minIntervalTimeInMiliSeconds, minIntervalDistanceInMeters, this);
-      /*  if (locationManager != null) {
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                setCoordinatesData(latitude, longitude);
-                setDate(location.getTime());
-                setSpeed(location.getSpeed());
-            }
-        }*/
     }
 
     public void stopTracking() {
         if (locationManager != null) {
-            isRequestForLocation = false;
             locationManager.removeUpdates(LocationTracker.this);
+            tripToSave = setTripData();
+            isRequestForLocation = false;
+
             speedCalculator.clearMapPoints();
+            this.mapPoints.clear();
         }
+    }
+
+    private Trip setTripData() {
+        if(mapPoints.size() >= 2) {
+            MapPoint firstLocation = mapPoints.get(0);
+            int lastIndex = mapPoints.size() - 1;
+            MapPoint lastLocation = mapPoints.get(lastIndex);
+            return new Trip(firstLocation.getTimestamp(), DateConverter.fromTimestamp(firstLocation.getTimestamp()), lastLocation.getTimestamp());
+        }
+        else return null;
     }
 
     public void setCoordinatesData(double latitude, double longitude) {
@@ -136,6 +148,10 @@ public class LocationTracker implements LocationListener {
 
         TextView speedData = actualActivity.findViewById(R.id.computedSpeedData);
         speedData.setText(speedToString);
+    }
+
+    public Trip getTripToSave() {
+        return tripToSave;
     }
 
     public boolean isRequestForLocation() {

@@ -13,14 +13,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.intern.wlacheta.testapp.R;
-import com.intern.wlacheta.testapp.activities.adapters.WordListAdapter;
-import com.intern.wlacheta.testapp.database.entities.Word;
-import com.intern.wlacheta.testapp.activities.adapters.viewmodel.WordsViewModel;
+import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
+import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
+import com.intern.wlacheta.testapp.database.entities.Trip;
 
 import java.util.List;
 
 public class TripsActivity extends AppCompatActivity {
-    private WordsViewModel wordsViewModel;
+    private TripsViewModel tripsViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,15 +28,16 @@ public class TripsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trips);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        final WordListAdapter adapter = new WordListAdapter(this);
+        //final WordListAdapter adapter = new WordListAdapter(this);
+        final TripsListAdapter adapter = new TripsListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        wordsViewModel = ViewModelProviders.of(this).get(WordsViewModel.class);
-        wordsViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
+        tripsViewModel = ViewModelProviders.of(this).get(TripsViewModel.class);
+        tripsViewModel.getAllTrips().observe(this, new Observer<List<Trip>>() {
             @Override
-            public void onChanged(@Nullable final List<Word> words) {
-                adapter.setWords(words);
+            public void onChanged(@Nullable final List<Trip> trips) {
+                adapter.setAllTrips(trips);
             }
         });
     }

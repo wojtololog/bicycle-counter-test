@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.database.entities.Word;
+import com.intern.wlacheta.testapp.database.repositories.TripRepository;
 import com.intern.wlacheta.testapp.database.repositories.WordRepository;
 import com.intern.wlacheta.testapp.location.LocationTracker;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
@@ -25,7 +26,6 @@ import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 public class TrackerActivity extends AppCompatActivity {
     private final LocationTracker locationTracker = new LocationTracker(this, this);
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
-    private WordRepository wordRepository;
 
     private Button startButton, stopButton;
 
@@ -108,9 +108,13 @@ public class TrackerActivity extends AppCompatActivity {
                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        wordRepository = new WordRepository(getApplication());
-                        wordRepository.insert(new Word("working"));
-                        Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
+                        TripRepository tripRepository = new TripRepository(getApplication());
+                        if(locationTracker.getTripToSave() != null) {
+                            tripRepository.insert(locationTracker.getTripToSave());
+                            Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(TrackerActivity.this, "Wait for established GPS connection!", Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .setNegativeButton("no", new DialogInterface.OnClickListener() {
@@ -123,10 +127,10 @@ public class TrackerActivity extends AppCompatActivity {
     }
 
     public void onStopButtonClick(View view) {
-        createSaveToDBRequestDialog();
         clearTrackingData();
         startButton.setEnabled(true);
         stopButton.setEnabled(false);
+        createSaveToDBRequestDialog();
     }
 
 

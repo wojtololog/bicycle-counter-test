@@ -13,7 +13,7 @@ public class SpeedCalculator {
     private double speed;
 
     private boolean searchForComputingMapPoints() {
-       if(mapPoints.size() > 2) {
+       if(mapPoints.size() >= 2) {
            int lastIndex = mapPoints.size() - 1;
            newestMapPoint = mapPoints.get(lastIndex);
            previousMapPoint = mapPoints.get(lastIndex-1);

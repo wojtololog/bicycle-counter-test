@@ -16,10 +16,10 @@ public class WordsViewModel extends AndroidViewModel {
     public WordsViewModel(Application application) {
         super(application);
         wordRepository = new WordRepository(application);
-        allWords = wordRepository.getAllWords();
     }
 
     public LiveData<List<Word>> getAllWords() {
+        allWords = wordRepository.getAllWords();
         return allWords;
     }
 

@@ -17,10 +17,10 @@ public class WordRepository {
     public WordRepository(Application application) {
         DBManager dbManager = DBManager.getDatabase(application);
         wordDao = dbManager.wordDao();
-        allWords = wordDao.getAllWords();
     }
 
     public LiveData<List<Word>> getAllWords() {
+        allWords = wordDao.getAllWords();
         return allWords;
     }
 

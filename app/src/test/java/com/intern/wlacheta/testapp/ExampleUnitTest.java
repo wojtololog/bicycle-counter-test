@@ -14,4 +14,12 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void stringFormatTest() {
+        String messageFormat = "ID: %d  StartDate: %s";
+        String startDate = "27.10.2018";
+        int id = 5;
+        System.out.print(String.format(messageFormat,id,startDate));
+    }
 }
