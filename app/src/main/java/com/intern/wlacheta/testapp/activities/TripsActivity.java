@@ -31,25 +31,29 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     private TripsViewModel tripsViewModel;
     private TripsListAdapter adapter;
     private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
+        buildRecyclerView();
 
-        recyclerView = findViewById(R.id.recycler_view);
-        //final WordListAdapter adapter = new WordListAdapter(this);
-        adapter = new TripsListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        tripsViewModel = ViewModelProviders.of(this).get(TripsViewModel.class);
         tripsViewModel.getAllTrips().observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(@Nullable final List<Trip> trips) {
                 adapter.setAllTrips(trips);
             }
         });
+    }
+
+    private void buildRecyclerView() {
+        recyclerView = findViewById(R.id.recycler_view);
+        adapter = new TripsListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        tripsViewModel = ViewModelProviders.of(this).get(TripsViewModel.class);
     }
 
     @Override
@@ -60,9 +64,6 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String searchingDate = DateConverter.fromTimeStampToDBFormat(calendar.getTimeInMillis());
 
-        adapter = new TripsListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         tripsViewModel.getTripsByDate(searchingDate).observe(this, new Observer<List<Trip>>() {
             @Override
             public void onChanged(@Nullable List<Trip> trips) {
