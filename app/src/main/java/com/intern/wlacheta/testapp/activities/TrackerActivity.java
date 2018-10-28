@@ -17,9 +17,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
-import com.intern.wlacheta.testapp.database.entities.Word;
 import com.intern.wlacheta.testapp.database.repositories.TripRepository;
-import com.intern.wlacheta.testapp.database.repositories.WordRepository;
 import com.intern.wlacheta.testapp.location.LocationTracker;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 

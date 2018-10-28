@@ -2,6 +2,7 @@ package com.intern.wlacheta.testapp.database.dao;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
@@ -20,6 +21,9 @@ public interface TripDao {
 
     @Query("DELETE FROM trips")
     void deleteAll();
+
+    @Delete
+    void delete(Trip... trips);
 
     @Query("SELECT * FROM trips ORDER BY start_date_timestamp desc")
     LiveData<List<Trip>> getAllTrips();

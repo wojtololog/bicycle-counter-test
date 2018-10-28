@@ -4,20 +4,19 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.intern.wlacheta.testapp.database.dao.IWordDao;
+import com.intern.wlacheta.testapp.database.dao.MapPointsDao;
 import com.intern.wlacheta.testapp.database.dao.TripDao;
+import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.entities.Trip;
-import com.intern.wlacheta.testapp.database.entities.Word;
 
-@Database(entities = {Word.class, Trip.class}, version = 3)
+@Database(entities = {Trip.class, MapPoint.class}, version = 4)
 public abstract class DBManager extends RoomDatabase {
-    public abstract IWordDao wordDao();
     public abstract TripDao tripDao();
+    public abstract MapPointsDao mapPointsDao();
 
     private static volatile DBManager DBInstance;
 
