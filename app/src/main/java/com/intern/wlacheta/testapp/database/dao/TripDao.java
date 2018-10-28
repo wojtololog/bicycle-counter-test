@@ -23,7 +23,7 @@ public interface TripDao {
     void deleteAll();
 
     @Delete
-    void delete(Trip... trips);
+    void delete(Trip trip);
 
     @Query("SELECT * FROM trips ORDER BY start_date_timestamp desc")
     LiveData<List<Trip>> getAllTrips();

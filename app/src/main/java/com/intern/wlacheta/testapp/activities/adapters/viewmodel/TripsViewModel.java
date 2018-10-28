@@ -24,6 +24,10 @@ public class TripsViewModel extends AndroidViewModel {
         tripRepository.insert(trip);
     }
 
+    public void delete(Trip trip) {
+        tripRepository.delete(trip);
+    }
+
     public LiveData<List<Trip>> getAllTrips() {
         allTrips = tripRepository.getAllTrips();
         return allTrips;

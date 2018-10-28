@@ -19,7 +19,7 @@ public interface MapPointsDao {
     void deleteAll();
 
     @Delete
-    void delete(MapPoint... mapPoints);
+    void delete(MapPoint mapPoint);
 
     @Query("SELECT * FROM map_points WHERE tripID=:tripID")
     LiveData<List<MapPoint>> findMapPointsForTrip(final int tripID);

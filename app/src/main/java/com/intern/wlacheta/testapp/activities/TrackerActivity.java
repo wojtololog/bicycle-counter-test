@@ -102,6 +102,7 @@ public class TrackerActivity extends AppCompatActivity {
     private void createSaveToDBRequestDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Saving")
+                .setCancelable(false)
                 .setMessage("Would you like to save your trip ?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

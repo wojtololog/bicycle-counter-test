@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
@@ -54,6 +55,15 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         tripsViewModel = ViewModelProviders.of(this).get(TripsViewModel.class);
+
+        adapter.setOnItemClickListener(new TripsListAdapter.OnItemClickListener() {
+            @Override
+            public void onDeleteIconClick(int position) {
+                Trip tripToDelete = adapter.getTripWithPosition(position);
+                tripsViewModel.delete(tripToDelete);
+                adapter.notifyItemRemoved(position);
+            }
+        });
     }
 
     @Override

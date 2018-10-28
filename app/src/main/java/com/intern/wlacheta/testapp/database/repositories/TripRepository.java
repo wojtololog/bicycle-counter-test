@@ -35,6 +35,24 @@ public class TripRepository {
         new insertAsyncTask(tripDao).execute(trip);
     }
 
+    public void delete(Trip trip) {
+        new deleteAsyncTask(tripDao).execute(trip);
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Trip,Void,Void> {
+        private TripDao asyncTaskDao;
+
+        public deleteAsyncTask(TripDao tripDao) {
+            this.asyncTaskDao = tripDao;
+        }
+
+        @Override
+        protected Void doInBackground(final Trip... params) {
+            asyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
     private static class insertAsyncTask extends AsyncTask<Trip,Void,Void> {
         private TripDao asyncTaskDao;
 
