@@ -2,12 +2,12 @@ package com.intern.wlacheta.testapp.location.model;
 
 import java.util.Date;
 
-public class ModelTrip {
+public class TripModel {
     private long startTripTimestamp;
-    private Date startTripDate;
+    private String startTripDate;
     private long endTripTimestamp;
 
-    public ModelTrip(long startTripTimestamp, Date startTripDate, long endTripTimestamp) {
+    public TripModel(long startTripTimestamp, String startTripDate, long endTripTimestamp) {
         this.startTripTimestamp = startTripTimestamp;
         this.startTripDate = startTripDate;
         this.endTripTimestamp = endTripTimestamp;
@@ -17,7 +17,7 @@ public class ModelTrip {
         return startTripTimestamp;
     }
 
-    public Date getStartTripDate() {
+    public String getStartTripDate() {
         return startTripDate;
     }
 

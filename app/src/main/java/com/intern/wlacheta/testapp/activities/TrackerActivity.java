@@ -1,6 +1,7 @@
 package com.intern.wlacheta.testapp.activities;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
+import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
+import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.repositories.TripRepository;
 import com.intern.wlacheta.testapp.location.LocationTracker;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
@@ -26,6 +29,7 @@ public class TrackerActivity extends AppCompatActivity {
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
 
     private Button startButton, stopButton;
+    private TripsViewModel tripsViewModel;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -107,13 +111,7 @@ public class TrackerActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        TripRepository tripRepository = new TripRepository(getApplication());
-                        if(locationTracker.getTripToSave() != null) {
-                            tripRepository.insert(locationTracker.getTripToSave());
-                            Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(TrackerActivity.this, "Wait for established GPS connection!", Toast.LENGTH_LONG).show();
-                        }
+                        insertTripToDB();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -123,6 +121,22 @@ public class TrackerActivity extends AppCompatActivity {
                     }
                 })
                 .create().show();
+    }
+
+    private void insertTripToDB() {
+        tripsViewModel = ViewModelProviders.of(TrackerActivity.this).get(TripsViewModel.class);
+        Trip tripToInsert = locationTracker.getTripToSave();
+        if(tripToInsert != null) {
+            tripsViewModel.insert(tripToInsert);
+            Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
+            //insertMapPointsForTrip(tripToInsert);
+        } else {
+            Toast.makeText(TrackerActivity.this, "Wait for established GPS connection!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void insertMapPointsForTrip(Trip tripToInsert) {
+        //todo object converter from MapPoints(model) to MapPoints(Entity)
     }
 
     public void onStopButtonClick(View view) {

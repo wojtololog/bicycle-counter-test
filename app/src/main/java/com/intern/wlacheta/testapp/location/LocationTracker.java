@@ -13,15 +13,15 @@ import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.utils.DateConverter;
 import com.intern.wlacheta.testapp.location.datamanager.SpeedCalculator;
-import com.intern.wlacheta.testapp.location.model.MapPoint;
-import com.intern.wlacheta.testapp.location.model.ModelTrip;
+import com.intern.wlacheta.testapp.location.model.MapPointModel;
+import com.intern.wlacheta.testapp.location.model.TripModel;
+import com.intern.wlacheta.testapp.mappers.TripMapper;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class LocationTracker implements LocationListener {
     private final Context actualContext;
@@ -31,10 +31,13 @@ public class LocationTracker implements LocationListener {
     private Location location;
 
     private final SpeedCalculator speedCalculator = new SpeedCalculator();
-    private MapPoint mapPoint;
+    private MapPointModel mapPointModel;
+
+    private TripModel tripModel;
+    private TripMapper tripMapper = new TripMapper();
+    private List<MapPointModel> mapPointsModel = new ArrayList<MapPointModel>();
 
     private Trip tripToSave;
-    private List<MapPoint> mapPoints = new ArrayList<MapPoint>();
 
     private boolean isRequestForLocation;
     private final int minIntervalTimeInMiliSeconds = 1000;
@@ -52,14 +55,14 @@ public class LocationTracker implements LocationListener {
     public void onLocationChanged(Location location) {
         if(location != null) {
             this.location = location;
-            mapPoint = new MapPoint(location.getLatitude(),location.getLongitude(),location.getTime());
-            mapPoints.add(mapPoint);
+            mapPointModel = new MapPointModel(location.getLatitude(),location.getLongitude(),location.getTime());
+            mapPointsModel.add(mapPointModel);
             if (countToMinPointsInterval == minPointsInterval) {
-                speedCalculator.addToMapPoints(mapPoint);
+                speedCalculator.addToMapPoints(mapPointModel);
                 countToMinPointsInterval = 0;
             }
-            setCoordinatesData(mapPoint.getLatitude(), mapPoint.getLongitude());
-            setDate(mapPoint.getTimestamp());
+            setCoordinatesData(mapPointModel.getLatitude(), mapPointModel.getLongitude());
+            setDate(mapPointModel.getTimestamp());
             speedCalculator.computeSpeed();
             if(this.location.hasSpeed()) {
                 setLocationSpeed(location.getSpeed());
@@ -102,20 +105,21 @@ public class LocationTracker implements LocationListener {
     public void stopTracking() {
         if (locationManager != null) {
             locationManager.removeUpdates(LocationTracker.this);
-            tripToSave = setTripData();
+            tripModel = setTripData();
+            tripToSave = tripMapper.fromModelToDB(tripModel);
             isRequestForLocation = false;
 
             speedCalculator.clearMapPoints();
-            this.mapPoints.clear();
+            this.mapPointsModel.clear();
         }
     }
 
-    private Trip setTripData() {
-        if(mapPoints.size() >= 2) {
-            MapPoint firstLocation = mapPoints.get(0);
-            int lastIndex = mapPoints.size() - 1;
-            MapPoint lastLocation = mapPoints.get(lastIndex);
-            return new Trip(firstLocation.getTimestamp(), DateConverter.fromTimeStampToDBFormat(firstLocation.getTimestamp()), lastLocation.getTimestamp());
+    private TripModel setTripData() {
+        if(mapPointsModel.size() >= 2) {
+            MapPointModel firstLocation = mapPointsModel.get(0);
+            int lastIndex = mapPointsModel.size() - 1;
+            MapPointModel lastLocation = mapPointsModel.get(lastIndex);
+            return new TripModel(firstLocation.getTimestamp(), DateConverter.fromTimeStampToDBFormat(firstLocation.getTimestamp()), lastLocation.getTimestamp());
         }
         else return null;
     }

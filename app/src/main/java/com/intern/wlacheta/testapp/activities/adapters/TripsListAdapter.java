@@ -75,7 +75,7 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
             holder.tripEndDateView.setText(String.format(endTripDate,DateConverter.fromTimeStampToString(currentTrip.getEndTripTimestamp())));
         } else {
             // Covers the case of data not being ready yet.
-            holder.tripStartDateView.setText("No ModelTrip");
+            holder.tripStartDateView.setText("No TripModel");
         }
     }
 

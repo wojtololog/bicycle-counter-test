@@ -1,22 +1,22 @@
 package com.intern.wlacheta.testapp.location.datamanager;
 
-import com.intern.wlacheta.testapp.location.model.MapPoint;
+import com.intern.wlacheta.testapp.location.model.MapPointModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpeedCalculator {
-    private List<MapPoint> mapPoints = new ArrayList<MapPoint>();
-    private MapPoint newestMapPoint;
-    private MapPoint previousMapPoint;
+    private List<MapPointModel> mapPointModels = new ArrayList<MapPointModel>();
+    private MapPointModel newestMapPointModel;
+    private MapPointModel previousMapPointModel;
 
     private double speed;
 
     private boolean searchForComputingMapPoints() {
-       if(mapPoints.size() >= 2) {
-           int lastIndex = mapPoints.size() - 1;
-           newestMapPoint = mapPoints.get(lastIndex);
-           previousMapPoint = mapPoints.get(lastIndex-1);
+       if(mapPointModels.size() >= 2) {
+           int lastIndex = mapPointModels.size() - 1;
+           newestMapPointModel = mapPointModels.get(lastIndex);
+           previousMapPointModel = mapPointModels.get(lastIndex-1);
            return true;
        }
        return false;
@@ -25,24 +25,24 @@ public class SpeedCalculator {
     private double computeDistanceBetweenTwoPoints() {
         if(searchForComputingMapPoints()) {
             //haversine law
-            double latitudeInRadian = Math.toRadians(newestMapPoint.getLatitude() - previousMapPoint.getLatitude());
-            double longitudeInRadian = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude());
-            double a = Math.sin(latitudeInRadian / 2) * Math.sin(latitudeInRadian / 2) + Math.cos(Math.toRadians(previousMapPoint.getLatitude())) * Math.cos(Math.toRadians(newestMapPoint.getLatitude())) * Math.sin(longitudeInRadian / 2) * Math.sin(longitudeInRadian / 2);
+            double latitudeInRadian = Math.toRadians(newestMapPointModel.getLatitude() - previousMapPointModel.getLatitude());
+            double longitudeInRadian = Math.toRadians(newestMapPointModel.getLongitude() - previousMapPointModel.getLongitude());
+            double a = Math.sin(latitudeInRadian / 2) * Math.sin(latitudeInRadian / 2) + Math.cos(Math.toRadians(previousMapPointModel.getLatitude())) * Math.cos(Math.toRadians(newestMapPointModel.getLatitude())) * Math.sin(longitudeInRadian / 2) * Math.sin(longitudeInRadian / 2);
             int earthRay = 6371000; //in meters
             return 2 * earthRay * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
             //approximate version (Equirectangular)
             /*int earthRay = 6371; //in km
-            double x = Math.toRadians(newestMapPoint.getLongitude() - previousMapPoint.getLongitude()) * Math.cos(Math.toRadians((newestMapPoint.getLatitude() + previousMapPoint.getLatitude()) / 2));
-            double y = Math.toRadians(newestMapPoint.getLatitude() - previousMapPoint.getLatitude());
+            double x = Math.toRadians(newestMapPointModel.getLongitude() - previousMapPointModel.getLongitude()) * Math.cos(Math.toRadians((newestMapPointModel.getLatitude() + previousMapPointModel.getLatitude()) / 2));
+            double y = Math.toRadians(newestMapPointModel.getLatitude() - previousMapPointModel.getLatitude());
             return (Math.sqrt(x * x + y * y) * earthRay) / 1000;*/
         }
         return 0;
     }
 
     private double computeTimeDifferenceBetweenTwoPoints() {
-        long newestTime = newestMapPoint.getTimestamp();
-        long previousTime = previousMapPoint.getTimestamp();
+        long newestTime = newestMapPointModel.getTimestamp();
+        long previousTime = previousMapPointModel.getTimestamp();
         return (newestTime - previousTime) / 1000; //time delta in [s]
     }
 
@@ -64,14 +64,14 @@ public class SpeedCalculator {
     }
 
     public void clearMapPoints() {
-        this.mapPoints.clear();
+        this.mapPointModels.clear();
     }
 
-    public List<MapPoint> getMapPoints() {
-        return mapPoints;
+    public List<MapPointModel> getMapPointModels() {
+        return mapPointModels;
     }
 
-    public void addToMapPoints(final MapPoint mapPoint) {
-        this.mapPoints.add(mapPoint);
+    public void addToMapPoints(final MapPointModel mapPointModel) {
+        this.mapPointModels.add(mapPointModel);
     }
 }

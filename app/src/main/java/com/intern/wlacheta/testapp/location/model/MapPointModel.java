@@ -1,11 +1,11 @@
 package com.intern.wlacheta.testapp.location.model;
 
-public class MapPoint {
+public class MapPointModel {
     private double latitude;
     private double longitude;
     private long timestamp;
 
-    public MapPoint(double latitude, double longitude, long timestamp) {
+    public MapPointModel(double latitude, double longitude, long timestamp) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = timestamp;
