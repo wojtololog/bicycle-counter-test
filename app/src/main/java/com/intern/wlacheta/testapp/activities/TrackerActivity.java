@@ -1,12 +1,15 @@
 package com.intern.wlacheta.testapp.activities;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,11 +21,17 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
+import com.intern.wlacheta.testapp.activities.adapters.viewmodel.MapPointsViewModel;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
+import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.repositories.TripRepository;
 import com.intern.wlacheta.testapp.location.LocationTracker;
+import com.intern.wlacheta.testapp.mappers.MapPointMapper;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrackerActivity extends AppCompatActivity {
     private final LocationTracker locationTracker = new LocationTracker(this, this);
@@ -30,6 +39,9 @@ public class TrackerActivity extends AppCompatActivity {
 
     private Button startButton, stopButton;
     private TripsViewModel tripsViewModel;
+    private MapPointsViewModel mapPointsViewModel;
+
+    private int searchedID;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -124,19 +136,39 @@ public class TrackerActivity extends AppCompatActivity {
     }
 
     private void insertTripToDB() {
-        tripsViewModel = ViewModelProviders.of(TrackerActivity.this).get(TripsViewModel.class);
         Trip tripToInsert = locationTracker.getTripToSave();
         if(tripToInsert != null) {
-            tripsViewModel.insert(tripToInsert);
+            tripsViewModel = ViewModelProviders.of(TrackerActivity.this).get(TripsViewModel.class);
+            long tripID = tripsViewModel.insert(tripToInsert); //todo id = 0 because database sets id by autogenerate; so we have to select recently inserted object (for instance select by timestamp) and then get its id
             Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
-            //insertMapPointsForTrip(tripToInsert);
+            //getRecentlyInsertedID(tripToInsert);
+           // insertMapPointsForTrip(4);
         } else {
             Toast.makeText(TrackerActivity.this, "Wait for established GPS connection!", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void insertMapPointsForTrip(Trip tripToInsert) {
-        //todo object converter from MapPoints(model) to MapPoints(Entity)
+    private void getRecentlyInsertedID(Trip tripToInsert) {
+        long searchedTimestamp = tripToInsert.getStartTripTimestamp();
+        tripsViewModel.getTripByStartDateTimestamp(searchedTimestamp).observe(this, new Observer<List<Trip>>() {
+            @Override
+            public void onChanged(@Nullable List<Trip> trips) {
+                if(trips != null) {
+                    searchedID = trips.get(0).getId();
+                }
+            }
+        });
+    }
+
+    private void insertMapPointsForTrip(int tripID) {
+        MapPointMapper mapPointMapper = new MapPointMapper(tripID);
+        List<MapPoint> mapPointsDB = mapPointMapper.fromModelMapPointsToDB(locationTracker.getMapPointsModel());
+        mapPointsViewModel = ViewModelProviders.of(TrackerActivity.this).get(MapPointsViewModel.class);
+        for(int i =0; i < mapPointsDB.size(); i++) {
+            mapPointsViewModel.insert(mapPointsDB.get(i));
+        }
+        locationTracker.clearMapPointsModel();
+        Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
     }
 
     public void onStopButtonClick(View view) {

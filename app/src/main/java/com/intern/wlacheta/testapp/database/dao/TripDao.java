@@ -17,7 +17,7 @@ import java.util.List;
 @TypeConverters(DateConverter.class)
 public interface TripDao {
     @Insert
-    void insert(Trip trip);
+    long insert(Trip trip);
 
     @Query("DELETE FROM trips")
     void deleteAll();
@@ -30,4 +30,7 @@ public interface TripDao {
 
     @Query("SELECT * FROM trips WHERE start_date=:pickedDate")
     LiveData<List<Trip>> findTripsByStartDate(final String pickedDate);
+
+    @Query("SELECT * FROM trips where start_date_timestamp =:startDateTimestamp")
+    LiveData<List<Trip>> findTripByStartDateTimestamp(final long startDateTimestamp);
 }

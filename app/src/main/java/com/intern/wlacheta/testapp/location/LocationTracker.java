@@ -110,7 +110,6 @@ public class LocationTracker implements LocationListener {
             isRequestForLocation = false;
 
             speedCalculator.clearMapPoints();
-            this.mapPointsModel.clear();
         }
     }
 
@@ -156,6 +155,14 @@ public class LocationTracker implements LocationListener {
 
     public Trip getTripToSave() {
         return tripToSave;
+    }
+
+    public List<MapPointModel> getMapPointsModel() {
+        return mapPointsModel;
+    }
+
+    public void clearMapPointsModel() {
+        this.mapPointsModel.clear();
     }
 
     public boolean isRequestForLocation() {

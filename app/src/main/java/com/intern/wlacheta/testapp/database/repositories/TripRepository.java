@@ -15,6 +15,7 @@ public class TripRepository {
     private TripDao tripDao;
     private LiveData<List<Trip>> allTrips;
     private LiveData<List<Trip>> tripsByDate;
+    private LiveData<List<Trip>> tripByStartDateTimestamp;
 
     public TripRepository(Application application) {
         DBManager dbManager = DBManager.getDatabase(application);
@@ -31,8 +32,14 @@ public class TripRepository {
         return tripsByDate;
     }
 
-    public void insert(Trip trip) {
+    public LiveData<List<Trip>> getTripByStartDateTimestamp(long startDateTimestamp) {
+        tripByStartDateTimestamp = tripDao.findTripByStartDateTimestamp(startDateTimestamp);
+        return tripByStartDateTimestamp;
+    }
+
+    public long insert(Trip trip) {
         new insertAsyncTask(tripDao).execute(trip);
+        return insertAsyncTask.getTripID();
     }
 
     public void delete(Trip trip) {
@@ -53,17 +60,27 @@ public class TripRepository {
         }
     }
 
-    private static class insertAsyncTask extends AsyncTask<Trip,Void,Void> {
+    private static class insertAsyncTask extends AsyncTask<Trip,Void,Long> {
         private TripDao asyncTaskDao;
+        private static long tripID;
 
         public insertAsyncTask(TripDao tripDao) {
             this.asyncTaskDao = tripDao;
         }
 
         @Override
-        protected Void doInBackground(final Trip... params) {
-            asyncTaskDao.insert(params[0]);
-            return null;
+        protected Long doInBackground(final Trip... params) {
+           return asyncTaskDao.insert(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Long aLong) {
+            super.onPostExecute(aLong);
+            insertAsyncTask.tripID = aLong;
+        }
+
+        public static long getTripID() {
+            return tripID;
         }
     }
 }
