@@ -140,19 +140,17 @@ public class TrackerActivity extends AppCompatActivity {
         if(tripToInsert != null) {
             tripsViewModel = ViewModelProviders.of(TrackerActivity.this).get(TripsViewModel.class);
             long tripID = tripsViewModel.insert(tripToInsert); //
-            Toast.makeText(TrackerActivity.this, "Trip saved!", Toast.LENGTH_SHORT).show();
-            //getRecentlyInsertedID(tripToInsert);
-           // insertMapPointsForTrip(4);
+            insertMapPointsForTrip(tripID);
         } else {
             Toast.makeText(TrackerActivity.this, "Wait for established GPS connection!", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void insertMapPointsForTrip(int tripID) {
+    private void insertMapPointsForTrip(long tripID) {
         MapPointMapper mapPointMapper = new MapPointMapper(tripID);
         List<MapPoint> mapPointsDB = mapPointMapper.fromModelMapPointsToDB(locationTracker.getMapPointsModel());
         mapPointsViewModel = ViewModelProviders.of(TrackerActivity.this).get(MapPointsViewModel.class);
-        for(int i =0; i < mapPointsDB.size(); i++) {
+        for(int i = 0; i < mapPointsDB.size(); i++) {
             mapPointsViewModel.insert(mapPointsDB.get(i));
         }
         locationTracker.clearMapPointsModel();

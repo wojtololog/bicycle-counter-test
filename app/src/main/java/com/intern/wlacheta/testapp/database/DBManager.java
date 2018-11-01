@@ -13,7 +13,7 @@ import com.intern.wlacheta.testapp.database.dao.TripDao;
 import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 
-@Database(entities = {Trip.class, MapPoint.class}, version = 4)
+@Database(entities = {Trip.class, MapPoint.class}, version = 5)
 public abstract class DBManager extends RoomDatabase {
     public abstract TripDao tripDao();
     public abstract MapPointsDao mapPointsDao();

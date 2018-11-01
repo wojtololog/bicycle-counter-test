@@ -17,7 +17,7 @@ public class MapPoint {
     private int id;
 
     @ColumnInfo(name = "tripID")
-    private int tripID;
+    private long tripID;
 
     @ColumnInfo(name = "longitude")
     private double longitude;
@@ -28,7 +28,7 @@ public class MapPoint {
     @ColumnInfo(name = "timestamp")
     private long timestamp;
 
-    public MapPoint(int tripID, double longitude, double latitude, long timestamp) {
+    public MapPoint(long tripID, double longitude, double latitude, long timestamp) {
         this.tripID = tripID;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -43,11 +43,11 @@ public class MapPoint {
         this.id = id;
     }
 
-    public int getTripID() {
+    public long getTripID() {
         return tripID;
     }
 
-    public void setTripID(int tripID) {
+    public void setTripID(long tripID) {
         this.tripID = tripID;
     }
 

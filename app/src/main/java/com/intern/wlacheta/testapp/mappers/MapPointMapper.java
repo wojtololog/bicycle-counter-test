@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapPointMapper {
-    private int tripID;
+    private long tripID;
 
-    public MapPointMapper(int tripID) {
+    public MapPointMapper(long tripID) {
         this.tripID = tripID;
     }
 
