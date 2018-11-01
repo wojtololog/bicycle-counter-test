@@ -10,12 +10,12 @@ import com.intern.wlacheta.testapp.database.entities.Trip;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class TripRepository {
     private TripDao tripDao;
     private LiveData<List<Trip>> allTrips;
     private LiveData<List<Trip>> tripsByDate;
-    private LiveData<List<Trip>> tripByStartDateTimestamp;
 
     public TripRepository(Application application) {
         DBManager dbManager = DBManager.getDatabase(application);
@@ -32,14 +32,16 @@ public class TripRepository {
         return tripsByDate;
     }
 
-    public LiveData<List<Trip>> getTripByStartDateTimestamp(long startDateTimestamp) {
-        tripByStartDateTimestamp = tripDao.findTripByStartDateTimestamp(startDateTimestamp);
-        return tripByStartDateTimestamp;
-    }
-
     public long insert(Trip trip) {
-        new insertAsyncTask(tripDao).execute(trip);
-        return insertAsyncTask.getTripID();
+        long tripID = 0;
+        try {
+          tripID = new insertAsyncTask(tripDao).execute(trip).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return tripID;
     }
 
     public void delete(Trip trip) {
@@ -62,7 +64,6 @@ public class TripRepository {
 
     private static class insertAsyncTask extends AsyncTask<Trip,Void,Long> {
         private TripDao asyncTaskDao;
-        private static long tripID;
 
         public insertAsyncTask(TripDao tripDao) {
             this.asyncTaskDao = tripDao;
@@ -71,16 +72,6 @@ public class TripRepository {
         @Override
         protected Long doInBackground(final Trip... params) {
            return asyncTaskDao.insert(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Long aLong) {
-            super.onPostExecute(aLong);
-            insertAsyncTask.tripID = aLong;
-        }
-
-        public static long getTripID() {
-            return tripID;
         }
     }
 }

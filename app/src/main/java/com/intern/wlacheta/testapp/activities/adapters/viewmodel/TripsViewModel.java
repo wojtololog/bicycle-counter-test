@@ -14,7 +14,6 @@ public class TripsViewModel extends AndroidViewModel {
     private TripRepository tripRepository;
     private LiveData<List<Trip>> allTrips;
     private LiveData<List<Trip>> tripsByDate;
-    private LiveData<List<Trip>> tripByStartDateTimestamp;
 
     public TripsViewModel(Application application) {
         super(application);
@@ -37,10 +36,5 @@ public class TripsViewModel extends AndroidViewModel {
     public LiveData<List<Trip>> getTripsByDate(String pickedDate) {
         tripsByDate = tripRepository.getTripsByStartDate(pickedDate);
         return tripsByDate;
-    }
-
-    public LiveData<List<Trip>> getTripByStartDateTimestamp(long startDateTimestamp) {
-        tripByStartDateTimestamp = tripRepository.getTripByStartDateTimestamp(startDateTimestamp);
-        return tripByStartDateTimestamp;
     }
 }

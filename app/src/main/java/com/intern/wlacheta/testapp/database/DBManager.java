@@ -58,7 +58,7 @@ public abstract class DBManager extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            mDao.deleteAll();
+            //mDao.deleteAll();
             long initialTimestamp = 1540665497;
             long endTimestamp = 1540666497;
             Trip trip = new Trip(initialTimestamp,"26-10-2018", endTimestamp);

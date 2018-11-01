@@ -139,25 +139,13 @@ public class TrackerActivity extends AppCompatActivity {
         Trip tripToInsert = locationTracker.getTripToSave();
         if(tripToInsert != null) {
             tripsViewModel = ViewModelProviders.of(TrackerActivity.this).get(TripsViewModel.class);
-            long tripID = tripsViewModel.insert(tripToInsert); //todo id = 0 because database sets id by autogenerate; so we have to select recently inserted object (for instance select by timestamp) and then get its id
-            Toast.makeText(TrackerActivity.this, "Trip saved", Toast.LENGTH_SHORT).show();
+            long tripID = tripsViewModel.insert(tripToInsert); //
+            Toast.makeText(TrackerActivity.this, "Trip saved!", Toast.LENGTH_SHORT).show();
             //getRecentlyInsertedID(tripToInsert);
            // insertMapPointsForTrip(4);
         } else {
             Toast.makeText(TrackerActivity.this, "Wait for established GPS connection!", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void getRecentlyInsertedID(Trip tripToInsert) {
-        long searchedTimestamp = tripToInsert.getStartTripTimestamp();
-        tripsViewModel.getTripByStartDateTimestamp(searchedTimestamp).observe(this, new Observer<List<Trip>>() {
-            @Override
-            public void onChanged(@Nullable List<Trip> trips) {
-                if(trips != null) {
-                    searchedID = trips.get(0).getId();
-                }
-            }
-        });
     }
 
     private void insertMapPointsForTrip(int tripID) {
