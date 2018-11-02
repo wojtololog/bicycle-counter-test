@@ -40,11 +40,11 @@ public class LocationTracker implements LocationListener {
     private Trip tripToSave;
 
     private boolean isRequestForLocation;
-    private final int minIntervalTimeInMiliSeconds = 1000;
+    private final int minIntervalTimeInMiliSeconds = 500;
     private final int minIntervalDistanceInMeters = 0;
-    private final short minPointsInterval = 2;
+    private final short minPointsInterval = 1;
     private static short countToMinPointsInterval = 0;
-    private final DecimalFormat speedFormat = new DecimalFormat("##.#");
+    private final DecimalFormat speedFormat = new DecimalFormat("###.#");
 
     public LocationTracker(Context context, Activity activity) {
         actualContext = context;
@@ -65,7 +65,7 @@ public class LocationTracker implements LocationListener {
             setDate(mapPointModel.getTimestamp());
             speedCalculator.computeSpeed();
             if(this.location.hasSpeed()) {
-                setLocationSpeed(location.getSpeed());
+                setLocationSpeed(location.getSpeed() * 3.6f);
             }
             setSpeed(speedCalculator.getSpeed());
             countToMinPointsInterval++;
@@ -73,10 +73,8 @@ public class LocationTracker implements LocationListener {
     }
 
     public void setLocationSpeed(float speed) {
-        String speedToString = String.valueOf(speed);
-
         TextView speedData = actualActivity.findViewById(R.id.locationSpeedData);
-        speedData.setText(speedToString);
+        speedData.setText(speedFormat.format(speed));
     }
 
     @Override
@@ -147,10 +145,8 @@ public class LocationTracker implements LocationListener {
     }
 
     public void setSpeed(double speed) {
-        String speedToString = String.valueOf(speed);
-
         TextView speedData = actualActivity.findViewById(R.id.computedSpeedData);
-        speedData.setText(speedToString);
+        speedData.setText(speedFormat.format(speed));
     }
 
     public Trip getTripToSave() {
