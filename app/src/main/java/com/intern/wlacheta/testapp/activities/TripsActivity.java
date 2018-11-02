@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
+import com.intern.wlacheta.testapp.activities.adapters.viewmodel.MapPointsViewModel;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
 import com.intern.wlacheta.testapp.activities.fragments.DatePickerFragment;
 import com.intern.wlacheta.testapp.database.entities.Trip;
@@ -33,6 +34,8 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     private TripsListAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+
+    private MapPointsViewModel mapPointsViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +61,10 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
 
         adapter.setOnItemClickListener(new TripsListAdapter.OnItemClickListener() {
             @Override
-            public void onDeleteIconClick(int position) {
-                Trip tripToDelete = adapter.getTripWithPosition(position);
-                tripsViewModel.delete(tripToDelete);
-                adapter.notifyItemRemoved(position);
+            public void onExportIconClick(int position) {
+                long tripIDToExport = adapter.getTripWithPosition(position).getId();
+                mapPointsViewModel = ViewModelProviders.of(TripsActivity.this).get(MapPointsViewModel.class);
+                mapPointsViewModel.findMapPointsForSelectedTrip(tripIDToExport);
             }
         });
     }

@@ -9,23 +9,43 @@ import com.intern.wlacheta.testapp.database.dao.MapPointsDao;
 import com.intern.wlacheta.testapp.database.entities.MapPoint;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MapPointsRepository {
     private MapPointsDao mapPointsDao;
-    private LiveData<List<MapPoint>> mapPointsForSelectedTrip;
+    private List<MapPoint> mapPointsForSelectedTrip;
 
     public MapPointsRepository(Application application) {
         DBManager dbManager = DBManager.getDatabase(application);
         mapPointsDao = dbManager.mapPointsDao();
     }
 
-    public LiveData<List<MapPoint>> findMapPointsByTripID(int tripID) {
-        mapPointsForSelectedTrip = mapPointsDao.findMapPointsForTrip(tripID);
+    public List<MapPoint> findMapPointsByTripID(long tripID) {
+        try {
+            mapPointsForSelectedTrip = new findMapPointsForTripAsyncTask(mapPointsDao).execute(tripID).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return mapPointsForSelectedTrip;
     }
 
     public void insert(MapPoint mapPoint) {
         new insertAsyncTask(mapPointsDao).execute(mapPoint);
+    }
+
+    private static class findMapPointsForTripAsyncTask extends AsyncTask<Long,Void,List<MapPoint>> {
+        private MapPointsDao asyncTaskDao;
+
+        public findMapPointsForTripAsyncTask(MapPointsDao mapPointsDao) {
+            this.asyncTaskDao = mapPointsDao;
+        }
+
+        @Override
+        protected List<MapPoint> doInBackground(final Long... params) {
+           return asyncTaskDao.findMapPointsForTrip(params[0]);
+        }
     }
 
     private static class insertAsyncTask extends AsyncTask<MapPoint,Void,Void> {

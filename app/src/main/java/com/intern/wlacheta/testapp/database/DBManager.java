@@ -13,7 +13,7 @@ import com.intern.wlacheta.testapp.database.dao.TripDao;
 import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 
-@Database(entities = {Trip.class, MapPoint.class}, version = 5)
+@Database(entities = {Trip.class, MapPoint.class}, version = 6)
 public abstract class DBManager extends RoomDatabase {
     public abstract TripDao tripDao();
     public abstract MapPointsDao mapPointsDao();
@@ -27,7 +27,7 @@ public abstract class DBManager extends RoomDatabase {
                     //create DB here
                     DBInstance = Room.databaseBuilder(context.getApplicationContext(), DBManager.class,"app_database")
                             .fallbackToDestructiveMigration()
-                            .addCallback(sRoomDatabaseCallback)
+                            //.addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -58,8 +58,8 @@ public abstract class DBManager extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            //mDao.deleteAll();
-            long initialTimestamp = 1540665497;
+            mDao.deleteAll();
+           /* long initialTimestamp = 1540665497;
             long endTimestamp = 1540666497;
             Trip trip = new Trip(initialTimestamp,"26-10-2018", endTimestamp);
             mDao.insert(trip);
@@ -78,7 +78,7 @@ public abstract class DBManager extends RoomDatabase {
             trip = new Trip(initialTimestamp + 54536,"29-10-2018", endTimestamp + 643524);
             mDao.insert(trip);
             trip = new Trip(initialTimestamp + 54536,"25-10-2018", endTimestamp + 643524);
-            mDao.insert(trip);
+            mDao.insert(trip);*/
             return null;
         }
     }

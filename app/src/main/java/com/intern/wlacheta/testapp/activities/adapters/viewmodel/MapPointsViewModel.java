@@ -7,10 +7,12 @@ import android.arch.lifecycle.LiveData;
 import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.repositories.MapPointsRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapPointsViewModel extends AndroidViewModel {
     private MapPointsRepository mapPointsRepository;
+    private List<MapPoint> mapPointsForSelectedTrip;
 
     public MapPointsViewModel(Application application) {
         super(application);
@@ -21,8 +23,12 @@ public class MapPointsViewModel extends AndroidViewModel {
         mapPointsRepository.insert(mapPoint);
     }
 
-    public LiveData<List<MapPoint>> getMapPointsForSelectedTrip(int tripID) {
-        return mapPointsRepository.findMapPointsByTripID(tripID);
+    public void findMapPointsForSelectedTrip(long tripID) {
+        mapPointsForSelectedTrip = new ArrayList<>();
+        mapPointsForSelectedTrip = mapPointsRepository.findMapPointsByTripID(tripID);
     }
 
+    public List<MapPoint> getMapPointsForSelectedTrip() {
+        return mapPointsForSelectedTrip;
+    }
 }

@@ -22,5 +22,5 @@ public interface MapPointsDao {
     void delete(MapPoint mapPoint);
 
     @Query("SELECT * FROM map_points WHERE tripID=:tripID")
-    LiveData<List<MapPoint>> findMapPointsForTrip(final int tripID);
+    List<MapPoint> findMapPointsForTrip(final long tripID);
 }

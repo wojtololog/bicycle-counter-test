@@ -24,7 +24,7 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
-        void onDeleteIconClick(int position);
+        void onExportIconClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -34,21 +34,21 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
     static class TripsViewHolder extends RecyclerView.ViewHolder {
         private final TextView tripStartDateView;
         private final TextView tripEndDateView;
-        private final ImageView deleteIcon;
+        private final ImageView exportIcon;
 
         private TripsViewHolder(View itemView, final OnItemClickListener onItemClickListener) {
             super(itemView);
             tripStartDateView = itemView.findViewById(R.id.startTripDate);
             tripEndDateView = itemView.findViewById(R.id.endTripDate);
-            deleteIcon = itemView.findViewById(R.id.delete_icon);
+            exportIcon = itemView.findViewById(R.id.export_icon);
 
-            deleteIcon.setOnClickListener(new View.OnClickListener() {
+            exportIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(onItemClickListener != null) {
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION) {
-                            onItemClickListener.onDeleteIconClick(position);
+                            onItemClickListener.onExportIconClick(position);
                         }
                     }
                 }
@@ -70,8 +70,7 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
     public void onBindViewHolder(TripsViewHolder holder, int position) {
         if (trips != null) {
             Trip currentTrip = trips.get(position);
-            holder.tripStartDateView.setText(currentTrip.getStartTripDate());
-            //holder.tripStartDateView.setText(String.format(startTripDate,DateConverter.fromTimeStampToString(currentTrip.getStartTripTimestamp())));
+            holder.tripStartDateView.setText(String.format(startTripDate,DateConverter.fromTimeStampToString(currentTrip.getStartTripTimestamp())));
             holder.tripEndDateView.setText(String.format(endTripDate,DateConverter.fromTimeStampToString(currentTrip.getEndTripTimestamp())));
         } else {
             // Covers the case of data not being ready yet.
