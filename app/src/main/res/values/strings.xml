@@ -16,4 +16,5 @@
     <string name="button_save">Save</string>
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="search">Search</string>
+    <string name="filename_hint">Type exporting filename</string>
 </resources>

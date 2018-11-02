@@ -14,22 +14,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.MapPointsViewModel;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
 import com.intern.wlacheta.testapp.activities.fragments.DatePickerFragment;
+import com.intern.wlacheta.testapp.activities.fragments.GPXExportDialog;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.utils.DateConverter;
 
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-public class TripsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class TripsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, GPXExportDialog.GPXExportDialogListener {
     private TripsViewModel tripsViewModel;
     private TripsListAdapter adapter;
     private RecyclerView recyclerView;
@@ -63,8 +61,19 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
             @Override
             public void onExportIconClick(int position) {
                 long tripIDToExport = adapter.getTripWithPosition(position).getId();
+                openGPXExportDialog(tripIDToExport);
                 mapPointsViewModel = ViewModelProviders.of(TripsActivity.this).get(MapPointsViewModel.class);
                 mapPointsViewModel.findMapPointsForSelectedTrip(tripIDToExport);
+            }
+
+            private void openGPXExportDialog(long tripIDToExport) {
+                GPXExportDialog gpxExportDialog = new GPXExportDialog();
+
+                Bundle dialogArguments = new Bundle();
+                dialogArguments.putLong("tripIDToExport",tripIDToExport);
+                gpxExportDialog.setArguments(dialogArguments);
+
+                gpxExportDialog.show(getSupportFragmentManager(),"export_dialog");
             }
         });
     }
@@ -128,5 +137,10 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     private void showTracker() {
         Intent intent = new Intent(this, TrackerActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void getSavingFileStatus(String status) {
+        //todo show in toast message status of file saving;
     }
 }
