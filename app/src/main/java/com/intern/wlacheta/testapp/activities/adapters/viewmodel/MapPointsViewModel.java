@@ -12,7 +12,6 @@ import java.util.List;
 
 public class MapPointsViewModel extends AndroidViewModel {
     private MapPointsRepository mapPointsRepository;
-    private List<MapPoint> mapPointsForSelectedTrip;
 
     public MapPointsViewModel(Application application) {
         super(application);
@@ -23,12 +22,7 @@ public class MapPointsViewModel extends AndroidViewModel {
         mapPointsRepository.insert(mapPoint);
     }
 
-    public void findMapPointsForSelectedTrip(long tripID) {
-        mapPointsForSelectedTrip = new ArrayList<>();
-        mapPointsForSelectedTrip = mapPointsRepository.findMapPointsByTripID(tripID);
-    }
-
-    public List<MapPoint> getMapPointsForSelectedTrip() {
-        return mapPointsForSelectedTrip;
+    public List<MapPoint> findMapPointsForSelectedTrip(long tripID) {
+       return mapPointsRepository.findMapPointsByTripID(tripID);
     }
 }

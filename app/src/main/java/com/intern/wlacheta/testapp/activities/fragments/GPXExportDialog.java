@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.intern.wlacheta.testapp.R;
+import com.intern.wlacheta.testapp.parsers.GPXparser;
 
 public class GPXExportDialog extends AppCompatDialogFragment {
-    private EditText filename;
+    private EditText editTextFilename;
     private long tripID;
     private GPXExportDialogListener gpxExportDialogListener;
+    private GPXparser gpXparser;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -23,7 +25,9 @@ public class GPXExportDialog extends AppCompatDialogFragment {
 
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         View view = layoutInflater.inflate(R.layout.filenamedialog_layout,null);
-        filename = view.findViewById(R.id.filename_editext);
+        editTextFilename = view.findViewById(R.id.filename_editext);
+        final String filename = editTextFilename.getText().toString();
+
         alertBuilder.setView(view)
                     .setTitle("GPX export")
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -36,7 +40,14 @@ public class GPXExportDialog extends AppCompatDialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(getArguments() != null) {
-                                tripID = getArguments().getLong("tripIDToExport");
+                                if(filename.isEmpty()) {
+                                    gpxExportDialogListener.getSavingFileStatus("Filename cannot be empty!");
+                                } else {
+                                    tripID = getArguments().getLong("tripIDToExport");
+                                    gpXparser = new GPXparser(tripID,filename,getActivity());
+                                    String fileSavingStatus = gpXparser.parseFromDB();
+                                    gpxExportDialogListener.getSavingFileStatus(fileSavingStatus);
+                                }
                             }
                         }
                     });

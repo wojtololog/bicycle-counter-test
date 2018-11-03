@@ -3,7 +3,6 @@ package com.intern.wlacheta.testapp.permissions;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -12,8 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 public class PermissionsProcessor {
-    private final int LOCATION_ALL_PERMISSIONS = 1;
-    private final String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+    private final int APP_REQUIRED_PERMISSIONS = 1;
+    private final String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private Context context;
     private Activity activity;
 
@@ -23,9 +22,8 @@ public class PermissionsProcessor {
     }
 
     public boolean isPermissionsNotGranted() {
-        if (ContextCompat.checkSelfPermission(context, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(context, PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED ) {
-            Toast.makeText(context, "You have already granted geolocation permission!",
-                    Toast.LENGTH_SHORT).show();
+        if (ContextCompat.checkSelfPermission(context, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, PERMISSIONS[2]) == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "You have already granted required permissions!", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;
@@ -33,17 +31,19 @@ public class PermissionsProcessor {
     }
 
     public void requestLocationPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[0]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[1])) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[0]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[1]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[2])) {
             new AlertDialog.Builder(context)
-                    .setTitle("Permission needed")
-                    .setMessage("This app requires GPS to track your location and to show date and speed")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    .setTitle("Permissions needed")
+                    .setMessage(" - This app requires GPS to track your location and to show date and speed." +
+                            "\n" +
+                            " - Write to external storage is required in order to save your trips in GPX format.")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(activity, PERMISSIONS, LOCATION_ALL_PERMISSIONS);
+                            ActivityCompat.requestPermissions(activity, PERMISSIONS, APP_REQUIRED_PERMISSIONS);
                         }
                     })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -52,11 +52,11 @@ public class PermissionsProcessor {
                     .create().show();
 
         } else {
-            ActivityCompat.requestPermissions(activity, PERMISSIONS, LOCATION_ALL_PERMISSIONS);
+            ActivityCompat.requestPermissions(activity, PERMISSIONS, APP_REQUIRED_PERMISSIONS);
         }
     }
 
-    public int getLocationAllPermissions() {
-        return LOCATION_ALL_PERMISSIONS;
+    public int getAllPermisionsCode() {
+        return APP_REQUIRED_PERMISSIONS;
     }
 }

@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
@@ -62,8 +63,6 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
             public void onExportIconClick(int position) {
                 long tripIDToExport = adapter.getTripWithPosition(position).getId();
                 openGPXExportDialog(tripIDToExport);
-                mapPointsViewModel = ViewModelProviders.of(TripsActivity.this).get(MapPointsViewModel.class);
-                mapPointsViewModel.findMapPointsForSelectedTrip(tripIDToExport);
             }
 
             private void openGPXExportDialog(long tripIDToExport) {
@@ -141,6 +140,6 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
 
     @Override
     public void getSavingFileStatus(String status) {
-        //todo show in toast message status of file saving;
+        Toast.makeText(this,status,Toast.LENGTH_LONG).show();
     }
 }

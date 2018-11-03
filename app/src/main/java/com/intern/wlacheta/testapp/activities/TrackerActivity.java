@@ -1,15 +1,12 @@
 package com.intern.wlacheta.testapp.activities;
 
 import android.app.AlertDialog;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,12 +22,10 @@ import com.intern.wlacheta.testapp.activities.adapters.viewmodel.MapPointsViewMo
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
 import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.entities.Trip;
-import com.intern.wlacheta.testapp.database.repositories.TripRepository;
 import com.intern.wlacheta.testapp.location.LocationTracker;
 import com.intern.wlacheta.testapp.mappers.MapPointMapper;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TrackerActivity extends AppCompatActivity {
@@ -174,11 +169,11 @@ public class TrackerActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == permissionsProcessor.getLocationAllPermissions()) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+        if (requestCode == permissionsProcessor.getAllPermisionsCode()) {
+            if (grantResults.length > 0 && ((grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) && grantResults[2] == PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(this, "Permissions GRANTED", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Permissions DENIED", Toast.LENGTH_SHORT).show();
             }
         }
     }
