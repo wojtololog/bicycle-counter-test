@@ -26,7 +26,6 @@ public class GPXExportDialog extends AppCompatDialogFragment {
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         View view = layoutInflater.inflate(R.layout.filenamedialog_layout,null);
         editTextFilename = view.findViewById(R.id.filename_editext);
-        final String filename = editTextFilename.getText().toString();
 
         alertBuilder.setView(view)
                     .setTitle("GPX export")
@@ -40,6 +39,8 @@ public class GPXExportDialog extends AppCompatDialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(getArguments() != null) {
+                                String filename = editTextFilename.getText().toString();
+
                                 if(filename.isEmpty()) {
                                     gpxExportDialogListener.getSavingFileStatus("Filename cannot be empty!");
                                 } else {
