@@ -11,13 +11,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.intern.wlacheta.testapp.R;
-import com.intern.wlacheta.testapp.parsers.GPXparser;
+import com.intern.wlacheta.testapp.parsers.GPXgenerator;
 
 public class GPXExportDialog extends AppCompatDialogFragment {
     private EditText editTextFilename;
     private long tripID;
     private GPXExportDialogListener gpxExportDialogListener;
-    private GPXparser gpXparser;
+    private GPXgenerator gpXgenerator;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -45,8 +45,8 @@ public class GPXExportDialog extends AppCompatDialogFragment {
                                     gpxExportDialogListener.getSavingFileStatus("Filename cannot be empty!");
                                 } else {
                                     tripID = getArguments().getLong("tripIDToExport");
-                                    gpXparser = new GPXparser(tripID,filename,getActivity());
-                                    String fileSavingStatus = gpXparser.parseFromDB();
+                                    gpXgenerator = new GPXgenerator(tripID,filename,getActivity());
+                                    String fileSavingStatus = gpXgenerator.generateFromDB();
                                     gpxExportDialogListener.getSavingFileStatus(fileSavingStatus);
                                 }
                             }
