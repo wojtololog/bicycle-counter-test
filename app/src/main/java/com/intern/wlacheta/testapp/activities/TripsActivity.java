@@ -110,6 +110,9 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
             case R.id.search_trips:
                 showDatePicker();
                 return true;
+            case R.id.refresh_icon:
+                adapter.setTrips(tripsViewModel.getAllTrips());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
