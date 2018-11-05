@@ -14,21 +14,33 @@ import java.util.concurrent.ExecutionException;
 
 public class TripRepository {
     private TripDao tripDao;
-    private LiveData<List<Trip>> allTrips;
-    private LiveData<List<Trip>> tripsByDate;
+    private List<Trip> allTrips;
+    private List<Trip> tripsByDate;
 
     public TripRepository(Application application) {
         DBManager dbManager = DBManager.getDatabase(application);
         tripDao = dbManager.tripDao();
     }
 
-    public LiveData<List<Trip>> getAllTrips() {
-        allTrips = tripDao.getAllTrips();
+    public List<Trip> getAllTrips() {
+        try {
+            allTrips = new findAllTrips(tripDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return allTrips;
     }
 
-    public LiveData<List<Trip>> getTripsByStartDate(String pickedDate) {
-        tripsByDate = tripDao.findTripsByStartDate(pickedDate);
+    public List<Trip> getTripsByStartDate(String pickedDate) {
+        try {
+            tripsByDate = new findTripsByStartDate(tripDao).execute(pickedDate).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return tripsByDate;
     }
 
@@ -46,6 +58,32 @@ public class TripRepository {
 
     public void delete(Trip trip) {
         new deleteAsyncTask(tripDao).execute(trip);
+    }
+
+    private static class findTripsByStartDate extends AsyncTask<String,Void,List<Trip>> {
+        private TripDao asyncTaskDao;
+
+        public findTripsByStartDate(TripDao tripDao) {
+            this.asyncTaskDao = tripDao;
+        }
+
+        @Override
+        protected List<Trip> doInBackground(final String... params) {
+            return asyncTaskDao.findTripsByStartDate(params[0]);
+        }
+    }
+
+    private static class findAllTrips extends AsyncTask<Void,Void,List<Trip>> {
+        private TripDao asyncTaskDao;
+
+        public findAllTrips(TripDao tripDao) {
+            this.asyncTaskDao = tripDao;
+        }
+
+        @Override
+        protected List<Trip> doInBackground(final Void... params) {
+            return asyncTaskDao.getAllTrips();
+        }
     }
 
     private static class deleteAsyncTask extends AsyncTask<Trip,Void,Void> {

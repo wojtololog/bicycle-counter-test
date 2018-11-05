@@ -12,8 +12,8 @@ import java.util.List;
 
 public class TripsViewModel extends AndroidViewModel {
     private TripRepository tripRepository;
-    private LiveData<List<Trip>> allTrips;
-    private LiveData<List<Trip>> tripsByDate;
+    private List<Trip> allTrips;
+    private List<Trip> tripsByDate;
 
     public TripsViewModel(Application application) {
         super(application);
@@ -28,12 +28,12 @@ public class TripsViewModel extends AndroidViewModel {
         tripRepository.delete(trip);
     }
 
-    public LiveData<List<Trip>> getAllTrips() {
+    public List<Trip> getAllTrips() {
         allTrips = tripRepository.getAllTrips();
         return allTrips;
     }
 
-    public LiveData<List<Trip>> getTripsByDate(String pickedDate) {
+    public List<Trip> getTripsByDate(String pickedDate) {
         tripsByDate = tripRepository.getTripsByStartDate(pickedDate);
         return tripsByDate;
     }

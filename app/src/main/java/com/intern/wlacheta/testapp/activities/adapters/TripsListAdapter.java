@@ -78,9 +78,13 @@ public class TripsListAdapter extends RecyclerView.Adapter<TripsListAdapter.Trip
         }
     }
 
-    public void setAllTrips(List<Trip> trips){
+    public void setTrips(List<Trip> trips){
         this.trips = trips;
         notifyDataSetChanged();
+    }
+
+    public List<Trip> getTrips() {
+        return trips;
     }
 
     public Trip getTripWithPosition(int position) {

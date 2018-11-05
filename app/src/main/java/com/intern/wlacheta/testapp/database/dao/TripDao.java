@@ -26,8 +26,8 @@ public interface TripDao {
     void delete(Trip trip);
 
     @Query("SELECT * FROM trips ORDER BY start_date_timestamp desc")
-    LiveData<List<Trip>> getAllTrips();
+    List<Trip> getAllTrips();
 
-    @Query("SELECT * FROM trips WHERE start_date=:pickedDate")
-    LiveData<List<Trip>> findTripsByStartDate(final String pickedDate);
+    @Query("SELECT * FROM trips WHERE start_date=:pickedDate ORDER BY start_date_timestamp desc")
+    List<Trip> findTripsByStartDate(final String pickedDate);
 }

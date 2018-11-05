@@ -1,7 +1,6 @@
 package com.intern.wlacheta.testapp.activities;
 
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,16 +19,13 @@ import android.widget.Toast;
 
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.activities.adapters.TripsListAdapter;
-import com.intern.wlacheta.testapp.activities.adapters.viewmodel.MapPointsViewModel;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
 import com.intern.wlacheta.testapp.activities.fragments.DatePickerFragment;
 import com.intern.wlacheta.testapp.activities.fragments.GPXExportDialog;
-import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.utils.DateConverter;
 import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class TripsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, GPXExportDialog.GPXExportDialogListener {
     private TripsViewModel tripsViewModel;
@@ -44,13 +40,7 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
         buildRecyclerView();
-
-        tripsViewModel.getAllTrips().observe(this, new Observer<List<Trip>>() {
-            @Override
-            public void onChanged(@Nullable final List<Trip> trips) {
-                adapter.setAllTrips(trips);
-            }
-        });
+        adapter.setTrips(tripsViewModel.getAllTrips());
     }
 
     private void buildRecyclerView() {
@@ -92,12 +82,10 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String searchingDate = DateConverter.fromTimeStampToDBFormat(calendar.getTimeInMillis());
 
-        tripsViewModel.getTripsByDate(searchingDate).observe(this, new Observer<List<Trip>>() {
-            @Override
-            public void onChanged(@Nullable List<Trip> trips) {
-                adapter.setAllTrips(trips);
-            }
-        });
+        adapter.setTrips(tripsViewModel.getTripsByDate(searchingDate));
+        if(adapter.getTrips().isEmpty()) {
+            Toast.makeText(this,"No trips found",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
