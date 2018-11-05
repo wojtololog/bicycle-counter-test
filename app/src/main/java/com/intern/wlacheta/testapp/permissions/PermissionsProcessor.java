@@ -23,14 +23,13 @@ public class PermissionsProcessor {
 
     public boolean isPermissionsNotGranted() {
         if (ContextCompat.checkSelfPermission(context, PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, PERMISSIONS[1]) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, PERMISSIONS[2]) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "You have already granted required permissions!", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;
         }
     }
 
-    public void requestLocationPermissions() {
+    public void requestRequiredPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[0]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[1]) || ActivityCompat.shouldShowRequestPermissionRationale(activity, PERMISSIONS[2])) {
             new AlertDialog.Builder(context)
                     .setTitle("Permissions needed")

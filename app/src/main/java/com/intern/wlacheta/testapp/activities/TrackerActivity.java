@@ -36,15 +36,13 @@ public class TrackerActivity extends AppCompatActivity {
     private TripsViewModel tripsViewModel;
     private MapPointsViewModel mapPointsViewModel;
 
-    private int searchedID;
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracker);
         if (permissionsProcessor.isPermissionsNotGranted()) {
-            permissionsProcessor.requestLocationPermissions();
+            permissionsProcessor.requestRequiredPermissions();
         }
         stopButton = findViewById(R.id.stopButton);
         startButton = findViewById(R.id.startButton);
@@ -99,9 +97,25 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (locationTracker.isRequestForLocation()) {
+            locationTracker.requestForLocation();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (locationTracker.isRequestForLocation()) {
+            locationTracker.requestForLocation();
+        }
+    }
+
     public void onStartButtonClick(View view) {
         if (permissionsProcessor.isPermissionsNotGranted()) {
-            permissionsProcessor.requestLocationPermissions();
+            permissionsProcessor.requestRequiredPermissions();
         } else {
             startButton.setEnabled(false);
             stopButton.setEnabled(true);

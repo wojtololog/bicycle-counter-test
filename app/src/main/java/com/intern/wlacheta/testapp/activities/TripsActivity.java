@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import com.intern.wlacheta.testapp.activities.fragments.DatePickerFragment;
 import com.intern.wlacheta.testapp.activities.fragments.GPXExportDialog;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.utils.DateConverter;
+import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 
 import java.util.Calendar;
 import java.util.List;
@@ -34,7 +37,7 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    private MapPointsViewModel mapPointsViewModel;
+    private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,8 +64,12 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         adapter.setOnItemClickListener(new TripsListAdapter.OnItemClickListener() {
             @Override
             public void onExportIconClick(int position) {
-                long tripIDToExport = adapter.getTripWithPosition(position).getId();
-                openGPXExportDialog(tripIDToExport);
+                if (permissionsProcessor.isPermissionsNotGranted()) {
+                    permissionsProcessor.requestRequiredPermissions();
+                } else {
+                    long tripIDToExport = adapter.getTripWithPosition(position).getId();
+                    openGPXExportDialog(tripIDToExport);
+                }
             }
 
             private void openGPXExportDialog(long tripIDToExport) {
@@ -141,5 +148,16 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     @Override
     public void getSavingFileStatus(String status) {
         Toast.makeText(this,status,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == permissionsProcessor.getAllPermisionsCode()) {
+            if (grantResults.length > 0 && ((grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) && grantResults[2] == PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(this, "Permissions GRANTED", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permissions DENIED", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
