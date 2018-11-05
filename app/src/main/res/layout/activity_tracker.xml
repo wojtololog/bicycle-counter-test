@@ -4,131 +4,147 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
     tools:context=".activities.TrackerActivity"
     tools:layout_editor_absoluteY="81dp">
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="271dp"
+        android:layout_width="156dp"
+        android:layout_height="302dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startButton">
 
         <TextView
             android:id="@+id/longitudeLabel"
-            android:layout_width="118dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/longitudeText" />
+            android:text="@string/longitudeText"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/latitudeLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/latitudeText" />
+            android:text="@string/latitudeText"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/dateLabel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dateText" />
+            android:layout_height="50dp"
+            android:text="@string/dateText"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/computedSpeedLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/computeSpeedText" />
+            android:text="@string/computeSpeedText"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/locationSpeedLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/locationSpeedText" />
+            android:text="@string/locationSpeedText"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/startButton"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginLeft="29dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="42dp"
-        android:layout_marginRight="42dp"
-        android:layout_marginBottom="23dp"
+        android:layout_width="155dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/holo_green_light"
         android:clickable="true"
         android:focusable="true"
         android:onClick="onStartButtonClick"
         android:text="@string/start_button"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/stopButton"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/stopButton"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginRight="55dp"
-        android:layout_marginBottom="23dp"
+        android:layout_width="151dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@android:color/holo_green_light"
         android:clickable="true"
         android:focusable="true"
         android:onClick="onStopButtonClick"
         android:text="@string/stop_button"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/startButton"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="38dp"
-        android:layout_marginRight="38dp"
-        android:layout_marginBottom="273dp"
+        android:layout_width="169dp"
+        android:layout_height="303dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/stopButton">
 
         <TextView
             android:id="@+id/longitudeData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/latitudeData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/dateData"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
+            android:layout_height="50dp"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/computedSpeedData"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
+            android:layout_height="53dp"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/locationSpeedData"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
+            android:layout_height="49dp"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

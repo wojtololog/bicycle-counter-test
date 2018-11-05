@@ -15,6 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.TrackerActivity"
+            android:label="@string/tracker"
             android:launchMode="singleTask"
             android:configChanges="orientation|screenSize">
             <intent-filter>
@@ -25,6 +26,7 @@
         </activity>
         <activity
             android:name=".activities.TripsActivity"
+            android:label="@string/trips_activity"
             android:launchMode="singleTask"
             android:configChanges="orientation|screenSize">
         </activity>

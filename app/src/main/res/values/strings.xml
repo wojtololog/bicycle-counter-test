@@ -17,4 +17,5 @@
     <string name="empty_not_saved">Word not saved because it is empty.</string>
     <string name="search">Search</string>
     <string name="filename_hint">Type exporting filename</string>
+    <string name="trips_activity">Saved trips</string>
 </resources>
