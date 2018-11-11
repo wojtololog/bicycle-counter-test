@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.intern.wlacheta.testapp.R;
-import com.intern.wlacheta.testapp.parsers.GPXgenerator;
+import com.intern.wlacheta.testapp.gpxformat.generator.GPXgenerator;
 
 public class GPXExportDialog extends AppCompatDialogFragment {
     private EditText editTextFilename;

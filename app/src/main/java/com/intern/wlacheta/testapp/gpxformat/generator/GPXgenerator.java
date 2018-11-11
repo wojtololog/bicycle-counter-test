@@ -1,4 +1,4 @@
-package com.intern.wlacheta.testapp.parsers;
+package com.intern.wlacheta.testapp.gpxformat.generator;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Environment;
