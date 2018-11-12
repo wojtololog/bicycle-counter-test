@@ -17,8 +17,7 @@
         <activity
             android:name=".activities.TrackerActivity"
             android:label="@string/tracker"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,8 +27,7 @@
         <activity
             android:name=".activities.TripsActivity"
             android:label="@string/trips_activity"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize">
+            android:launchMode="singleTask">
         </activity>
         <service android:name=".location.LocationTrackerService" ></service>
     </application>

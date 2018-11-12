@@ -37,7 +37,6 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class TrackerActivity extends AppCompatActivity {
-    //private final LocationTrackerService locationTrackerService = new LocationTrackerService(this, this);
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
     private BroadcastReceiver locationDataReceiver, tripToSaveWithMapPointsReceiver;
 
@@ -47,8 +46,12 @@ public class TrackerActivity extends AppCompatActivity {
 
     private TripModel tripToSaveModel;
     private List<MapPointModel> mapPointsToSave;
+    private MapPointModel actualLocationData;
 
     private TextView longitudeTextView, latitudeTextView, dateTextView, locationSpeedTextView, computedSpeedTextView;
+    private TextView longitudeLabel, latitudeLabel, dateLabel, locationSpeedLabel, computedSpeedLabel;
+
+    private boolean isTrackingRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +62,36 @@ public class TrackerActivity extends AppCompatActivity {
         }
         findViews();
         createReceivers();
-        stopButton.setEnabled(false);
+        restoreButtonsState(savedInstanceState);
+        restoreTextViewsState(savedInstanceState);
+    }
+
+    private void restoreTextViewsState(Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            MapPointModel restoredGpsData = savedInstanceState.getParcelable("gpsDataToRestore");
+            if(restoredGpsData != null) {
+                setTextViewsLabels();
+                setLocationDataUI(restoredGpsData);
+            } else {
+                setTextViewsLabels();
+            }
+        }
+    }
+
+    private void restoreButtonsState(Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            isTrackingRequest = savedInstanceState.getBoolean("tracking_state");
+            if(isTrackingRequest) {
+                startButton.setEnabled(false);
+                stopButton.setEnabled(true);
+            } else {
+                startButton.setEnabled(true);
+                stopButton.setEnabled(false);
+            }
+        } else {
+            startButton.setEnabled(true);
+            stopButton.setEnabled(false);
+        }
     }
 
     private void createReceivers() {
@@ -67,7 +99,7 @@ public class TrackerActivity extends AppCompatActivity {
             locationDataReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    MapPointModel actualLocationData = (MapPointModel) intent.getExtras().get("currentLocation");
+                    actualLocationData = (MapPointModel) intent.getExtras().get("currentLocation");
                     setLocationDataUI(actualLocationData);
                 }
             };
@@ -86,6 +118,14 @@ public class TrackerActivity extends AppCompatActivity {
         registerReceiver(tripToSaveWithMapPointsReceiver, new IntentFilter("tripWithMapPoints"));
     }
 
+    private void setTextViewsLabels() {
+        longitudeLabel.setText(R.string.longitudeText);
+        latitudeLabel.setText(R.string.latitudeText);
+        dateLabel.setText(R.string.dateText);
+        locationSpeedLabel.setText(R.string.locationSpeedText);
+        computedSpeedLabel.setText(R.string.computeSpeedText);
+    }
+
     private void setLocationDataUI(MapPointModel actualLocationData) {
         if(actualLocationData != null) {
             final DecimalFormat speedFormat = new DecimalFormat("###.#");
@@ -102,11 +142,18 @@ public class TrackerActivity extends AppCompatActivity {
     private void findViews() {
         stopButton = findViewById(R.id.stopButton);
         startButton = findViewById(R.id.startButton);
+
         longitudeTextView = findViewById(R.id.longitudeData);
         latitudeTextView = findViewById(R.id.latitudeData);
         dateTextView = findViewById(R.id.dateData);
         locationSpeedTextView = findViewById(R.id.locationSpeedData);
         computedSpeedTextView = findViewById(R.id.computedSpeedData);
+
+        longitudeLabel = findViewById(R.id.longitudeLabel);
+        latitudeLabel = findViewById(R.id.latitudeLabel);
+        dateLabel = findViewById(R.id.dateLabel);
+        locationSpeedLabel = findViewById(R.id.locationSpeedLabel);
+        computedSpeedLabel = findViewById(R.id.computedSpeedLabel);
     }
 
     @Override
@@ -114,39 +161,6 @@ public class TrackerActivity extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.tracker_menu, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.trips_tracker:
-                showSavedTrips();
-                return true;
-            case R.id.settings_tracker:
-                showSettings();
-                return true;
-            case R.id.help_tracker:
-                showHelp();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    //todo new activities
-    private void showHelp() {
-        Intent intent = new Intent(this, HelpActivity.class);
-        startActivity(intent);
-    }
-
-    private void showSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    private void showSavedTrips() {
-        Intent intent = new Intent(this, TripsActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -171,6 +185,48 @@ public class TrackerActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.trips_tracker:
+                showSavedTrips();
+                return true;
+            case R.id.settings_tracker:
+                showSettings();
+                return true;
+            case R.id.help_tracker:
+                showHelp();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean("tracking_state", isTrackingRequest);
+        outState.putParcelable("gpsDataToRestore", actualLocationData);
+    }
+
+    //todo new activities
+    private void showHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        startActivity(intent);
+    }
+
+    private void showSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void showSavedTrips() {
+        Intent intent = new Intent(this, TripsActivity.class);
+        startActivity(intent);
+    }
+
+
     public void onStartButtonClick(View view) {
         if (permissionsProcessor.isPermissionsNotGranted()) {
             permissionsProcessor.requestRequiredPermissions();
@@ -180,6 +236,7 @@ public class TrackerActivity extends AppCompatActivity {
 
             Intent serviceIntent = new Intent(this, LocationTrackerService.class);
             ContextCompat.startForegroundService(this, serviceIntent);
+            isTrackingRequest = true;
         }
     }
 
@@ -226,6 +283,7 @@ public class TrackerActivity extends AppCompatActivity {
     }
 
     public void onStopButtonClick(View view) {
+        isTrackingRequest = false;
         clearTrackingUIData();
         destroyTrackingService();
         startButton.setEnabled(true);
