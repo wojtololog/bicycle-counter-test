@@ -9,6 +9,7 @@ public class DateConverter {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private static final SimpleDateFormat dbDateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private static final SimpleDateFormat gpxDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat uiDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     @TypeConverter
     public static Date fromTimestamp(Long value) {
@@ -35,6 +36,12 @@ public class DateConverter {
     public static String fromTimeStampToGPXFormat(long dateInUTC) {
         Date date = new Date(dateInUTC);
         String dateToString = gpxDateFormat.format(date);
+        return dateToString;
+    }
+
+    public static String fromTimeStampToUI(long dateInUTC) {
+        Date date = new Date(dateInUTC);
+        String dateToString = uiDateFormat.format(date);
         return dateToString;
     }
 }

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.intern.wlacheta.testapp.R;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.MapPointsViewModel;
 import com.intern.wlacheta.testapp.activities.adapters.viewmodel.TripsViewModel;
+import com.intern.wlacheta.testapp.activities.fragments.SaveTripToDBDialog;
 import com.intern.wlacheta.testapp.database.entities.MapPoint;
 import com.intern.wlacheta.testapp.database.entities.Trip;
 import com.intern.wlacheta.testapp.database.utils.DateConverter;
@@ -36,7 +37,7 @@ import com.intern.wlacheta.testapp.permissions.PermissionsProcessor;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class TrackerActivity extends AppCompatActivity {
+public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDialog.SaveTripToDBDialogListener {
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
     private BroadcastReceiver locationDataReceiver, tripToSaveWithMapPointsReceiver;
 
@@ -50,6 +51,7 @@ public class TrackerActivity extends AppCompatActivity {
 
     private TextView longitudeTextView, latitudeTextView, dateTextView, locationSpeedTextView, computedSpeedTextView;
     private TextView longitudeLabel, latitudeLabel, dateLabel, locationSpeedLabel, computedSpeedLabel;
+    private final DecimalFormat speedFormat = new DecimalFormat("###");
 
     private boolean isTrackingRequest;
 
@@ -128,13 +130,11 @@ public class TrackerActivity extends AppCompatActivity {
 
     private void setLocationDataUI(MapPointModel actualLocationData) {
         if(actualLocationData != null) {
-            final DecimalFormat speedFormat = new DecimalFormat("###.#");
-
             locationSpeedTextView.setText(speedFormat.format(actualLocationData.getLocationSpeed()));
             computedSpeedTextView.setText(speedFormat.format(actualLocationData.getComputedSpeed()));
             longitudeTextView.setText(String.valueOf(actualLocationData.getLongitude()));
             latitudeTextView.setText(String.valueOf(actualLocationData.getLongitude()));
-            dateTextView.setText(DateConverter.fromTimeStampToString(actualLocationData.getTimestamp()));
+            dateTextView.setText(DateConverter.fromTimeStampToUI(actualLocationData.getTimestamp()));
         }
     }
 
@@ -241,23 +241,8 @@ public class TrackerActivity extends AppCompatActivity {
     }
 
     private void createSaveToDBRequestDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Saving")
-                .setCancelable(false)
-                .setMessage("Would you like to save your trip ?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        insertTripToDB(tripToSaveModel);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create().show();
+        SaveTripToDBDialog saveTripToDBDialog = new SaveTripToDBDialog();
+        saveTripToDBDialog.show(getSupportFragmentManager(),"save_dialog");
     }
 
     private void insertTripToDB(TripModel tripToSaveModel) {
@@ -316,4 +301,12 @@ public class TrackerActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void getIsSaveToDBRequest(boolean isSaveToDBRequest) {
+        if(isSaveToDBRequest) {
+            insertTripToDB(tripToSaveModel);
+        } else {
+            Toast.makeText(this, "Trip NOT saved", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
