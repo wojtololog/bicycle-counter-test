@@ -1,10 +1,9 @@
 package com.intern.wlacheta.testapp.activities;
 
-import android.app.AlertDialog;
+
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -12,10 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
 
     private TextView longitudeTextView, latitudeTextView, dateTextView, locationSpeedTextView, computedSpeedTextView;
     private TextView longitudeLabel, latitudeLabel, dateLabel, locationSpeedLabel, computedSpeedLabel;
+    private Toolbar trackerToolbar;
     private final DecimalFormat speedFormat = new DecimalFormat("###");
 
     private boolean isTrackingRequest;
@@ -62,6 +64,9 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
         if (permissionsProcessor.isPermissionsNotGranted()) {
             permissionsProcessor.requestRequiredPermissions();
         }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        trackerToolbar = findViewById(R.id.tracker_toolbar);
+        setSupportActionBar(trackerToolbar);
         findViews();
         createReceivers();
         restoreButtonsState(savedInstanceState);
@@ -191,12 +196,6 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
             case R.id.trips_tracker:
                 showSavedTrips();
                 return true;
-            case R.id.settings_tracker:
-                showSettings();
-                return true;
-            case R.id.help_tracker:
-                showHelp();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -210,22 +209,10 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
         outState.putParcelable("gpsDataToRestore", actualLocationData);
     }
 
-    //todo new activities
-    private void showHelp() {
-        Intent intent = new Intent(this, HelpActivity.class);
-        startActivity(intent);
-    }
-
-    private void showSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
     private void showSavedTrips() {
         Intent intent = new Intent(this, TripsActivity.class);
         startActivity(intent);
     }
-
 
     public void onStartButtonClick(View view) {
         if (permissionsProcessor.isPermissionsNotGranted()) {

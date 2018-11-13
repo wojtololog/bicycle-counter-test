@@ -1,5 +1,6 @@
 package com.intern.wlacheta.testapp.activities;
 
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +34,7 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     private TripsListAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private Toolbar tripsToolbar;
 
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
 
@@ -40,6 +43,12 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
         buildRecyclerView();
+
+        tripsToolbar = findViewById(R.id.trips_toolbar);
+        setSupportActionBar(tripsToolbar);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         adapter.setTrips(tripsViewModel.getAllTrips());
     }
 
@@ -98,15 +107,6 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.GPS_trips:
-                showTracker();
-                return true;
-            case R.id.settings_trips:
-                showSettings();
-                return true;
-            case R.id.help_trips:
-                showHelp();
-                return true;
             case R.id.search_trips:
                 showDatePicker();
                 return true;
@@ -121,19 +121,6 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
     private void showDatePicker() {
         DialogFragment datePicker = new DatePickerFragment();
         datePicker.show(getSupportFragmentManager(), "Date picker");
-    }
-
-    private void showHelp() {
-
-    }
-
-    private void showSettings() {
-
-    }
-
-    private void showTracker() {
-        Intent intent = new Intent(this, TrackerActivity.class);
-        startActivity(intent);
     }
 
     @Override

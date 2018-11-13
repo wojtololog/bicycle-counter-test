@@ -2,25 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/search_trips"
+        android:icon="@drawable/ic_search"
+        android:title=""
+        app:showAsAction="ifRoom" />
+
     <item android:id="@+id/refresh_icon"
         android:icon="@drawable/ic_refresh"
         app:showAsAction="ifRoom"
         android:title="" />
-
-    <item android:id="@+id/GPS_trips"
-        android:title="@string/tracker"
-        app:showAsAction="never"/>
-
-    <item android:id="@+id/search_trips"
-        android:title="@string/search"
-        app:showAsAction="never"/>
-
-    <item android:id="@+id/settings_trips"
-        android:title="@string/settings"
-        app:showAsAction="never"/>
-
-    <item android:id="@+id/help_trips"
-        android:title="@string/help"
-        app:showAsAction="never"/>
 
 </menu>

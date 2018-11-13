@@ -8,6 +8,10 @@
     tools:context=".activities.TrackerActivity"
     tools:layout_editor_absoluteY="81dp">
 
+    <include layout="@layout/tracker_toolbar"
+        android:id="@+id/tracker_toolbar">
+    </include>
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="156dp"
@@ -67,7 +71,7 @@
         android:layout_height="56dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:background="@android:color/holo_green_light"
         android:clickable="true"
         android:focusable="true"
@@ -76,15 +80,15 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tracker_toolbar" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/stopButton"
         android:layout_width="151dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:background="@android:color/holo_green_light"
         android:clickable="true"
         android:focusable="true"
@@ -93,7 +97,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tracker_toolbar" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
