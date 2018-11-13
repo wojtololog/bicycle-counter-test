@@ -73,6 +73,7 @@ public class TripsActivity extends AppCompatActivity implements DatePickerDialog
 
             private void openGPXExportDialog(long tripIDToExport) {
                 GPXExportDialog gpxExportDialog = new GPXExportDialog();
+                gpxExportDialog.setCancelable(false);
 
                 Bundle dialogArguments = new Bundle();
                 dialogArguments.putLong("tripIDToExport",tripIDToExport);

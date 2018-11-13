@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -55,7 +56,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
     private Toolbar trackerToolbar;
     private final DecimalFormat speedFormat = new DecimalFormat("###");
 
-    private boolean isTrackingRequest;
+    private boolean isTrackingRequest, isBackButtonPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +70,28 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
         setSupportActionBar(trackerToolbar);
         findViews();
         createReceivers();
-        restoreButtonsState(savedInstanceState);
+        if(isBackButtonPressed = loadFromPreferences()) {
+            restoreButtonsStateIfActivityDestroyed();
+        } else {
+            restoreButtonsState(savedInstanceState);
+        }
         restoreTextViewsState(savedInstanceState);
+    }
+
+    private void restoreButtonsStateIfActivityDestroyed() {
+        if(isTrackingRequest) {
+            startButton.setEnabled(false);
+            stopButton.setEnabled(true);
+        } else {
+            startButton.setEnabled(true);
+            stopButton.setEnabled(false);
+        }
+    }
+
+    private boolean loadFromPreferences() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        isTrackingRequest = sharedPreferences.getBoolean("back_button_tracking_request",false);
+        return sharedPreferences.getBoolean("back_button", false);
     }
 
     private void restoreTextViewsState(Bundle savedInstanceState) {
@@ -202,6 +223,21 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
     }
 
     @Override
+    public void onBackPressed() {
+        isBackButtonPressed = true;
+        saveStateOnBackButtonPressed(isBackButtonPressed, isTrackingRequest);
+        super.onBackPressed();
+    }
+
+    private void saveStateOnBackButtonPressed(boolean isBackButtonPressed, boolean isTrackingRequest) {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("back_button", isBackButtonPressed);
+        editor.putBoolean("back_button_tracking_request", isTrackingRequest);
+        editor.apply();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -229,6 +265,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
 
     private void createSaveToDBRequestDialog() {
         SaveTripToDBDialog saveTripToDBDialog = new SaveTripToDBDialog();
+        saveTripToDBDialog.setCancelable(false);
         saveTripToDBDialog.show(getSupportFragmentManager(),"save_dialog");
     }
 

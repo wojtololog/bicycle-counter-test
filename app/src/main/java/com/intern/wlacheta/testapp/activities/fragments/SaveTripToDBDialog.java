@@ -15,7 +15,6 @@ public class SaveTripToDBDialog extends AppCompatDialogFragment {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
 
         alertBuilder.setTitle("Saving")
-                .setCancelable(false)
                 .setMessage("Would you like to save your trip ?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
