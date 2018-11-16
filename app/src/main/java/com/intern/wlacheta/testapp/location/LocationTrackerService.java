@@ -36,7 +36,6 @@ import static com.intern.wlacheta.testapp.notifications.App.LOCATION_CHANNEL_ID;
 
 public class LocationTrackerService extends Service implements LocationListener {
     private LocationManager locationManager;
-    private Location location;
 
     private final SpeedCalculator speedCalculator = new SpeedCalculator();
     private MapPointModel mapPointModel;
@@ -44,12 +43,10 @@ public class LocationTrackerService extends Service implements LocationListener 
     private TripModel tripModel;
     private List<MapPointModel> mapPointsModel = new ArrayList<>();
 
-    private boolean isRequestForLocation;
-    private final int minIntervalTimeInMiliSeconds = 500;
+    private final int minIntervalTimeInMiliSeconds = 1000;
     private final int minIntervalDistanceInMeters = 0;
-    private final short minPointsInterval = 1;
+    private final short minPointsInterval = 2;
     private static short countToMinPointsInterval = 0;
-    private final DecimalFormat speedFormat = new DecimalFormat("###.#");
 
 
     @Override
@@ -90,24 +87,24 @@ public class LocationTrackerService extends Service implements LocationListener 
     }
 
 
-
     @Override
     public void onLocationChanged(Location location) {
-        if(location != null) {
-            this.location = location;
-
+        if (location != null) {
             if (countToMinPointsInterval == minPointsInterval) {
                 speedCalculator.addToMapPoints(mapPointModel);
+                speedCalculator.computeSpeed();
+                if (location.hasSpeed()) {
+                    mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), (location.getSpeed() * 3.6f), speedCalculator.getSpeed());
+                } else {
+                    mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), 0, speedCalculator.getSpeed());
+                }
+                mapPointsModel.add(mapPointModel);
                 countToMinPointsInterval = 0;
             }
-            speedCalculator.computeSpeed();
-            if(this.location.hasSpeed()) {
-                mapPointModel = new MapPointModel(location.getLatitude(),location.getLongitude(),location.getTime(),(location.getSpeed() * 3.6f),speedCalculator.getSpeed());
-                mapPointsModel.add(mapPointModel);
-                Intent intent = new Intent("currentLocationListener");
-                intent.putExtra("currentLocation", mapPointModel);
-                sendBroadcast(intent);
-            }
+            Intent intent = new Intent("currentLocationListener");
+            intent.putExtra("currentLocation", mapPointModel);
+            sendBroadcast(intent);
+
             countToMinPointsInterval++;
         }
     }
@@ -130,8 +127,7 @@ public class LocationTrackerService extends Service implements LocationListener 
 
     @SuppressLint("MissingPermission") //it is handled by permission processor
     private void requestForLocation() {
-        isRequestForLocation = true;
-        if(locationManager == null) {
+        if (locationManager == null) {
             locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minIntervalTimeInMiliSeconds, minIntervalDistanceInMeters, this);
         }
@@ -147,13 +143,12 @@ public class LocationTrackerService extends Service implements LocationListener 
     }
 
     private TripModel setTripData() {
-        if(mapPointsModel.size() >= 2) {
+        if (mapPointsModel.size() >= 2) {
             MapPointModel firstLocation = mapPointsModel.get(0);
             int lastIndex = mapPointsModel.size() - 1;
             MapPointModel lastLocation = mapPointsModel.get(lastIndex);
             return new TripModel(firstLocation.getTimestamp(), DateConverter.fromTimeStampToDBFormat(firstLocation.getTimestamp()), lastLocation.getTimestamp());
-        }
-        else return null;
+        } else return null;
     }
 
     @Nullable
