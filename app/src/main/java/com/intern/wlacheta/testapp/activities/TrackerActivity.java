@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -42,6 +43,7 @@ import java.util.List;
 public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDialog.SaveTripToDBDialogListener {
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
     private BroadcastReceiver locationDataReceiver, tripToSaveWithMapPointsReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     private Button startButton, stopButton;
     private TripsViewModel tripsViewModel;
@@ -123,6 +125,8 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
     }
 
     private void createReceivers() {
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+
         if(locationDataReceiver == null) {
             locationDataReceiver = new BroadcastReceiver() {
                 @Override
@@ -132,7 +136,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
                 }
             };
         }
-        registerReceiver(locationDataReceiver, new IntentFilter("currentLocationListener"));
+        localBroadcastManager.registerReceiver(locationDataReceiver, new IntentFilter("currentLocationListener"));
 
         if(tripToSaveWithMapPointsReceiver == null) {
             tripToSaveWithMapPointsReceiver = new BroadcastReceiver() {
@@ -143,7 +147,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
                 }
             };
         }
-        registerReceiver(tripToSaveWithMapPointsReceiver, new IntentFilter("tripWithMapPoints"));
+        localBroadcastManager.registerReceiver(tripToSaveWithMapPointsReceiver, new IntentFilter("tripWithMapPoints"));
     }
 
     private void setTextViewsLabels() {
@@ -206,8 +210,8 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(locationDataReceiver);
-        unregisterReceiver(tripToSaveWithMapPointsReceiver);
+       localBroadcastManager.unregisterReceiver(locationDataReceiver);
+       localBroadcastManager.unregisterReceiver(tripToSaveWithMapPointsReceiver);
         super.onDestroy();
     }
 

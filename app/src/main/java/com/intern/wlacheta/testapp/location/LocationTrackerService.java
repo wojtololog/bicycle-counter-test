@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.TextView;
 
 import com.intern.wlacheta.testapp.R;
@@ -39,6 +40,8 @@ public class LocationTrackerService extends Service implements LocationListener 
 
     private final SpeedCalculator speedCalculator = new SpeedCalculator();
     private MapPointModel mapPointModel;
+
+    private LocalBroadcastManager localBroadcastManager;
 
     private TripModel tripModel;
     private List<MapPointModel> mapPointsModel = new ArrayList<>();
@@ -69,6 +72,7 @@ public class LocationTrackerService extends Service implements LocationListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
         Notification notification = buildNotification();
         requestForLocation();
         startForeground(1, notification);
@@ -81,7 +85,7 @@ public class LocationTrackerService extends Service implements LocationListener 
         Intent intent = new Intent("tripWithMapPoints");
         intent.putExtra("tripToSave", tripModel);
         intent.putParcelableArrayListExtra("mapPoints", (ArrayList<? extends Parcelable>) mapPointsModel);
-        sendBroadcast(intent);
+        localBroadcastManager.sendBroadcast(intent);
         clearMapPointsModel();
         super.onDestroy();
     }
@@ -91,20 +95,21 @@ public class LocationTrackerService extends Service implements LocationListener 
     public void onLocationChanged(Location location) {
         if (location != null) {
             if (countToMinPointsInterval == minPointsInterval) {
-                speedCalculator.addToMapPoints(mapPointModel);
                 speedCalculator.computeSpeed();
                 if (location.hasSpeed()) {
                     mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), (location.getSpeed() * 3.6f), speedCalculator.getSpeed());
                 } else {
                     mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), 0, speedCalculator.getSpeed());
                 }
+                speedCalculator.addToMapPoints(mapPointModel);
+
+                Intent intent = new Intent("currentLocationListener");
+                intent.putExtra("currentLocation", mapPointModel);
+                localBroadcastManager.sendBroadcast(intent);
+
                 mapPointsModel.add(mapPointModel);
                 countToMinPointsInterval = 0;
             }
-            Intent intent = new Intent("currentLocationListener");
-            intent.putExtra("currentLocation", mapPointModel);
-            sendBroadcast(intent);
-
             countToMinPointsInterval++;
         }
     }
