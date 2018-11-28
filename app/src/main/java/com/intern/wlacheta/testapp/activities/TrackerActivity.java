@@ -43,7 +43,6 @@ import java.util.List;
 public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDialog.SaveTripToDBDialogListener {
     private final PermissionsProcessor permissionsProcessor = new PermissionsProcessor(this, this);
     private BroadcastReceiver locationDataReceiver, tripToSaveWithMapPointsReceiver;
-    private LocalBroadcastManager localBroadcastManager;
 
     private Button startButton, stopButton;
     private TripsViewModel tripsViewModel;
@@ -125,8 +124,6 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
     }
 
     private void createReceivers() {
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-
         if(locationDataReceiver == null) {
             locationDataReceiver = new BroadcastReceiver() {
                 @Override
@@ -136,7 +133,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
                 }
             };
         }
-        localBroadcastManager.registerReceiver(locationDataReceiver, new IntentFilter("currentLocationListener"));
+        registerReceiver(locationDataReceiver, new IntentFilter("currentLocationListener"));
 
         if(tripToSaveWithMapPointsReceiver == null) {
             tripToSaveWithMapPointsReceiver = new BroadcastReceiver() {
@@ -147,7 +144,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
                 }
             };
         }
-        localBroadcastManager.registerReceiver(tripToSaveWithMapPointsReceiver, new IntentFilter("tripWithMapPoints"));
+        registerReceiver(tripToSaveWithMapPointsReceiver, new IntentFilter("tripWithMapPoints"));
     }
 
     private void setTextViewsLabels() {
@@ -210,9 +207,9 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
 
     @Override
     protected void onDestroy() {
-       localBroadcastManager.unregisterReceiver(locationDataReceiver);
-       localBroadcastManager.unregisterReceiver(tripToSaveWithMapPointsReceiver);
-        super.onDestroy();
+       unregisterReceiver(locationDataReceiver);
+       unregisterReceiver(tripToSaveWithMapPointsReceiver);
+       super.onDestroy();
     }
 
     @Override

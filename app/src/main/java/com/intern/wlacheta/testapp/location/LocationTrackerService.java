@@ -41,8 +41,6 @@ public class LocationTrackerService extends Service implements LocationListener 
     private final SpeedCalculator speedCalculator = new SpeedCalculator();
     private MapPointModel mapPointModel;
 
-    private LocalBroadcastManager localBroadcastManager;
-
     private TripModel tripModel;
     private List<MapPointModel> mapPointsModel = new ArrayList<>();
 
@@ -72,7 +70,6 @@ public class LocationTrackerService extends Service implements LocationListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
         Notification notification = buildNotification();
         requestForLocation();
         startForeground(1, notification);
@@ -85,7 +82,7 @@ public class LocationTrackerService extends Service implements LocationListener 
         Intent intent = new Intent("tripWithMapPoints");
         intent.putExtra("tripToSave", tripModel);
         intent.putParcelableArrayListExtra("mapPoints", (ArrayList<? extends Parcelable>) mapPointsModel);
-        localBroadcastManager.sendBroadcast(intent);
+        sendBroadcast(intent);
         clearMapPointsModel();
         super.onDestroy();
     }
@@ -105,7 +102,7 @@ public class LocationTrackerService extends Service implements LocationListener 
 
                 Intent intent = new Intent("currentLocationListener");
                 intent.putExtra("currentLocation", mapPointModel);
-                localBroadcastManager.sendBroadcast(intent);
+                sendBroadcast(intent);
 
                 mapPointsModel.add(mapPointModel);
                 countToMinPointsInterval = 0;
