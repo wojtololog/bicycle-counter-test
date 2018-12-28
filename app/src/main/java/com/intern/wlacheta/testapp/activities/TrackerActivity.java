@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -52,8 +51,8 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
     private List<MapPointModel> mapPointsToSave;
     private MapPointModel actualLocationData;
 
-    private TextView longitudeTextView, latitudeTextView, dateTextView, locationSpeedTextView, computedSpeedTextView;
-    private TextView longitudeLabel, latitudeLabel, dateLabel, locationSpeedLabel, computedSpeedLabel;
+    private TextView longitudeTextView, latitudeTextView, dateTextView, speedTextView;
+    private TextView longitudeLabel, latitudeLabel, dateLabel, speedLabel;
     private Toolbar trackerToolbar;
     private final DecimalFormat speedFormat = new DecimalFormat("###");
 
@@ -151,14 +150,12 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
         longitudeLabel.setText(R.string.longitudeText);
         latitudeLabel.setText(R.string.latitudeText);
         dateLabel.setText(R.string.dateText);
-        locationSpeedLabel.setText(R.string.locationSpeedText);
-        computedSpeedLabel.setText(R.string.computeSpeedText);
+        speedLabel.setText(R.string.speedText);
     }
 
     private void setLocationDataUI(MapPointModel actualLocationData) {
         if(actualLocationData != null) {
-            locationSpeedTextView.setText(speedFormat.format(actualLocationData.getLocationSpeed()));
-            computedSpeedTextView.setText(speedFormat.format(actualLocationData.getComputedSpeed()));
+            speedTextView.setText(speedFormat.format(actualLocationData.getLocationSpeed()));
             longitudeTextView.setText(String.valueOf(actualLocationData.getLongitude()));
             latitudeTextView.setText(String.valueOf(actualLocationData.getLongitude()));
             dateTextView.setText(DateConverter.fromTimeStampToUI(actualLocationData.getTimestamp()));
@@ -173,14 +170,12 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
         longitudeTextView = findViewById(R.id.longitudeData);
         latitudeTextView = findViewById(R.id.latitudeData);
         dateTextView = findViewById(R.id.dateData);
-        locationSpeedTextView = findViewById(R.id.locationSpeedData);
-        computedSpeedTextView = findViewById(R.id.computedSpeedData);
+        speedTextView = findViewById(R.id.speedData);
 
         longitudeLabel = findViewById(R.id.longitudeLabel);
         latitudeLabel = findViewById(R.id.latitudeLabel);
         dateLabel = findViewById(R.id.dateLabel);
-        locationSpeedLabel = findViewById(R.id.locationSpeedLabel);
-        computedSpeedLabel = findViewById(R.id.computedSpeedLabel);
+        speedLabel = findViewById(R.id.speedLabel);
     }
 
     @Override
@@ -308,8 +303,7 @@ public class TrackerActivity extends AppCompatActivity implements SaveTripToDBDi
 
 
     private void clearTrackingUIData() {
-        locationSpeedTextView.setText("");
-        computedSpeedTextView.setText("");
+        speedTextView.setText("");
         longitudeTextView.setText("");
         latitudeTextView.setText("");
         dateTextView.setText("");

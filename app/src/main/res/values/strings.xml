@@ -18,4 +18,5 @@
     <string name="search">Search</string>
     <string name="filename_hint">Type exporting filename</string>
     <string name="trips_activity">Saved trips</string>
+    <string name="speedText">Speed [km/h]:</string>
 </resources>

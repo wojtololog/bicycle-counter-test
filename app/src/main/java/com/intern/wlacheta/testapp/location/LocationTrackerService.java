@@ -91,22 +91,20 @@ public class LocationTrackerService extends Service implements LocationListener 
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
+            speedCalculator.computeSpeed();
+            if (location.hasSpeed()) {
+                mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), (location.getSpeed() * 3.6f), speedCalculator.getSpeed());
+            } else {
+                mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), 0, speedCalculator.getSpeed());
+            }
             if (countToMinPointsInterval == minPointsInterval) {
-                speedCalculator.computeSpeed();
-                if (location.hasSpeed()) {
-                    mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), (location.getSpeed() * 3.6f), speedCalculator.getSpeed());
-                } else {
-                    mapPointModel = new MapPointModel(location.getLatitude(), location.getLongitude(), location.getTime(), 0, speedCalculator.getSpeed());
-                }
                 speedCalculator.addToMapPoints(mapPointModel);
-
-                Intent intent = new Intent("currentLocationListener");
-                intent.putExtra("currentLocation", mapPointModel);
-                sendBroadcast(intent);
-
-                mapPointsModel.add(mapPointModel);
                 countToMinPointsInterval = 0;
             }
+            Intent intent = new Intent("currentLocationListener");
+            intent.putExtra("currentLocation", mapPointModel);
+            sendBroadcast(intent);
+            mapPointsModel.add(mapPointModel);
             countToMinPointsInterval++;
         }
     }

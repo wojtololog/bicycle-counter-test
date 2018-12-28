@@ -48,18 +48,10 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/computedSpeedLabel"
+            android:id="@+id/speedLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/computeSpeedText"
-            android:textColor="@android:color/black"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/locationSpeedLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/locationSpeedText"
+            android:text="@string/speedText"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
 
@@ -135,20 +127,12 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/computedSpeedData"
+            android:id="@+id/speedData"
             android:layout_width="match_parent"
-            android:layout_height="53dp"
+            android:layout_height="71dp"
             android:text=""
             android:textColor="@android:color/black"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/locationSpeedData"
-            android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:text=""
-            android:textColor="@android:color/black"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
